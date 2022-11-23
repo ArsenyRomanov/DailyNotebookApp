@@ -12,19 +12,20 @@
         <DataGrid x:Name="NotebookDataGrid" Margin="5,5,310,274" FontSize="16" FontWeight="Bold" AutoGenerateColumns="False" CanUserAddRows="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Creation date" Width="165" IsReadOnly="True" CanUserResize="False"
-                                    Binding="{Binding Path = CreationDate}"/>
-                <DataGridTextColumn Header="Finish to" Width="165" IsReadOnly="True" CanUserResize="False"/>
+                                    Binding="{Binding Path=CreationDate}"/>
+                <DataGridTextColumn Header="Finish to" Width="165" IsReadOnly="True" CanUserResize="False"
+                                    Binding="{Binding Path=FinishToDate}"/>
                 <DataGridTextColumn Header="Short description" Width="*" IsReadOnly="True" CanUserResize="False"
-                                    Binding="{Binding Path = ShortDescription}"/>
+                                    Binding="{Binding Path=ShortDescription}"/>
                 <DataGridCheckBoxColumn Header="Done" IsReadOnly="False" CanUserResize="False"
-                                        Binding="{Binding Path = IsCompleted, UpdateSourceTrigger = PropertyChanged}"/>
+                                        Binding="{Binding Path=IsCompleted, UpdateSourceTrigger=PropertyChanged}"/>
             </DataGrid.Columns>
         </DataGrid>
 
         <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Margin="5">
             <Button x:Name="ReturnToMenuButton" Content="Return to menu" FontSize="16" Margin="0,0,0,5" Width="300" Height="Auto"/>
-            <Button x:Name="CreateTaskButton" Content="Create task" FontSize="16" Margin="0,0,0,5" Width="Auto" Height="Auto"/>
-            <Button x:Name="DeleteTaskButton" Content="Delete task" FontSize="16" Margin="0,0,0,5" Width="Auto" Height="Auto"/>
+            <Button x:Name="CreateTaskButton" Content="Create task" FontSize="16" Margin="0,0,0,5" Width="Auto" Height="Auto" Click="CreateTaskButton_Click"/>
+            <Button x:Name="DeleteTaskButton" Content="Delete task" FontSize="16" Margin="0,0,0,5" Width="Auto" Height="Auto" Click="DeleteTaskButton_Click"/>
             <Button x:Name="EditTaskButton" Content="Edit task" FontSize="16" Width="Auto" Height="Auto"/>
         </StackPanel>
 

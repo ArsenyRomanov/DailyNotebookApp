@@ -1,15 +1,33 @@
-﻿using System;
+﻿using DailyNotebookApp.Services;
+using System;
 using System.ComponentModel;
 
 namespace DailyNotebookApp.Models
 {
-    internal class Task : INotifyPropertyChanged
+    public class Task : INotifyPropertyChanged
     {
         private bool isCompleted;
         private string shortDescription;
+        private string creationDate;
+        private string finishToDate;
 
-        public string CreationDate { get; private set; }
-        private string FinishToDate { get; set; }
+        public string CreationDate
+        {
+            get { return creationDate; }
+            set
+            {
+                creationDate = HelpService.FormatDateTimeOutput(value);
+            }
+        }
+
+        public string FinishToDate
+        {
+            get { return finishToDate; }
+            set
+            {
+                finishToDate = HelpService.FormatDateTimeOutput(value);
+            }
+        }
 
         public bool IsCompleted
         {
@@ -35,7 +53,7 @@ namespace DailyNotebookApp.Models
 
         public Task()
         {
-            CreationDate = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString();
+            CreationDate = HelpService.FormatDateTimeOutput();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

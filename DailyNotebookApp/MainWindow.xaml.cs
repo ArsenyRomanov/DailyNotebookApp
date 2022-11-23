@@ -35,10 +35,10 @@ namespace DailyNotebookApp
             }
 
             NotebookDataGrid.ItemsSource = tasks;
-            tasks.ListChanged += TaskList_ListChanged;
+            tasks.ListChanged += Tasks_ListChanged;
         }
 
-        private void TaskList_ListChanged(object sender, ListChangedEventArgs e)
+        private void Tasks_ListChanged(object sender, ListChangedEventArgs e)
         {
             if (e.ListChangedType == ListChangedType.ItemAdded ||
                 e.ListChangedType == ListChangedType.ItemDeleted ||
@@ -53,6 +53,26 @@ namespace DailyNotebookApp
                     MessageBox.Show(exception.Message);
                 }
             }
+        }
+
+        private void CreateTaskButton_Click(object sender, RoutedEventArgs e)
+        {
+            var newTask = new Task();
+            var createTaskWindow = new CreateTaskWindow(newTask);
+            createTaskWindow.ShowDialog();
+            if (!string.IsNullOrWhiteSpace(newTask.ShortDescription))
+            {
+                tasks.Add(newTask);
+            }
+        }
+
+        private void DeleteTaskButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!(NotebookDataGrid.SelectedItem is Task taskToDelete))
+                return;
+            if (tasks.Count > 1)
+                NotebookDataGrid.SelectedItem = NotebookDataGrid.Items[NotebookDataGrid.SelectedIndex - 1];
+            tasks.Remove(taskToDelete);
         }
     }
 }
