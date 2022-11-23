@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DailyNotebookApp.Models;
+using System;
+using System.Windows.Controls;
 
 namespace DailyNotebookApp.Services
 {
@@ -21,6 +23,17 @@ namespace DailyNotebookApp.Services
                 return dateTime.ToShortDateString() + " " + dateTime.ToShortTimeString();
             }
             return "-";
+        }
+
+        public static void MarkDateRangeInCalendar(Calendar calendar, DateRange dateRange, string finishToDate)
+        {
+            calendar.SelectedDates.AddRange(dateRange.Start, dateRange.End);
+            DateTime.TryParse(finishToDate, out DateTime finishToDateTime);
+
+            if (!dateRange.Contains(finishToDateTime))
+            {
+                calendar.SelectedDates.Add(finishToDateTime.Date);
+            }
         }
     }
 }

@@ -29,6 +29,10 @@ namespace DailyNotebookApp
             NewTask.IsCompleted = false;
             NewTask.CreationDate = CreationDateTextBlock.Text;
             NewTask.FinishToDate = CheckNAssignService.CheckNAssignFinishTo(FinishToDatePicker, FinishToHoursTextBox, FinishToMinutesTextBox);
+            NewTask.Priority = (PriorityEnum)PriorityComboBox.SelectedItem;
+            NewTask.TypeOfTask = (TypeOfTaskEnum)TypeOfTaskComboBox.SelectedItem;
+            NewTask.DetailedDescription = DetailedDescriptionTextBox.Text;
+            NewTask.DateRange = new DateRange(DateRangeFirstDateDatePicker.SelectedDate.Value, DateRangeLastDateDatePicker.SelectedDate.Value);
 
             Close();
         }
@@ -36,6 +40,10 @@ namespace DailyNotebookApp
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             CreationDateTextBlock.Text = HelpService.FormatDateTimeOutput();
+            PriorityComboBox.ItemsSource = Enum.GetValues(typeof(PriorityEnum));
+            PriorityComboBox.SelectedItem = PriorityEnum.None;
+            TypeOfTaskComboBox.ItemsSource = Enum.GetValues(typeof(TypeOfTaskEnum));
+            TypeOfTaskComboBox.SelectedItem = TypeOfTaskEnum.None;
         }
 
         private void AdditionalInfoExpander_Expanded(object sender, RoutedEventArgs e)

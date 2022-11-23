@@ -49,24 +49,13 @@
                                Style="{StaticResource MaterialDesignBody1TextBlock}"/>
                             <ComboBox x:Name="PriorityComboBox" HorizontalAlignment="Right" 
                               Width="200" Height="40" FontSize="16">
-                                <TextBlock Text="0" Style="{StaticResource MaterialDesignBody1TextBlock}"/>
-                                <TextBlock Text="1" Style="{StaticResource MaterialDesignBody1TextBlock}"/>
-                                <TextBlock Text="2" Style="{StaticResource MaterialDesignBody1TextBlock}"/>
-                                <TextBlock Text="3" Style="{StaticResource MaterialDesignBody1TextBlock}"/>
-                                <TextBlock Text="4" Style="{StaticResource MaterialDesignBody1TextBlock}"/>
-                                <TextBlock Text="5" Style="{StaticResource MaterialDesignBody1TextBlock}"/>
-                                <TextBlock Text="6" Style="{StaticResource MaterialDesignBody1TextBlock}"/>
-                                <TextBlock Text="7" Style="{StaticResource MaterialDesignBody1TextBlock}"/>
-                                <TextBlock Text="8" Style="{StaticResource MaterialDesignBody1TextBlock}"/>
-                                <TextBlock Text="9" Style="{StaticResource MaterialDesignBody1TextBlock}"/>
-                                <TextBlock Text="10" Style="{StaticResource MaterialDesignBody1TextBlock}"/>
                             </ComboBox>
                         </Grid>
                         <Grid Margin="0,20,0,0">
                             <TextBlock HorizontalAlignment="Left" Text="Type of task: "
                                Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="0,5,0,0"/>
-                            <ComboBox x:Name="TypeOfTaskComboBox" HorizontalAlignment="Right" Width="200" Height="40">
-                                <TextBlock Text="Home" Style="{StaticResource MaterialDesignBody1TextBlock}"/>
+                            <ComboBox x:Name="TypeOfTaskComboBox" HorizontalAlignment="Right"
+                                      Width="200" Height="40" FontSize="16">
                             </ComboBox>
                         </Grid>
 
@@ -90,7 +79,7 @@
                     <Expander x:Name="AdditionalInfoExpander" HorizontalAlignment="Right" 
                           Padding="5" ExpandDirection="Right" Expanded="AdditionalInfoExpander_Expanded" Collapsed="AdditionalInfoExpander_Collapsed">
                         <StackPanel MinWidth="412">
-                            <TextBox x:Name="DetailedTaskTextBox" Height="120" 
+                            <TextBox x:Name="DetailedDescriptionTextBox" Height="120" 
                                  SpellCheck.IsEnabled="True" TextWrapping="Wrap" 
                                  materialDesign:HintAssist.Hint="Detailed task" FontSize="16" 
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="412"/>

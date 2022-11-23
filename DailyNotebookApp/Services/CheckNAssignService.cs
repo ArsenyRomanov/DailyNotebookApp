@@ -7,11 +7,9 @@ namespace DailyNotebookApp.Services
     {
         public static string CheckNAssignFinishTo(DatePicker finishToDatePicker, TextBox finishToHoursTextBox, TextBox finishToMinutesTextBox)
         {
-            var result = new DateTime();
-
             if (finishToDatePicker.SelectedDate != null)
             {
-                result = finishToDatePicker.SelectedDate.Value;
+                var result = finishToDatePicker.SelectedDate.Value;
 
                 if (!string.IsNullOrWhiteSpace(finishToHoursTextBox.Text))
                 {

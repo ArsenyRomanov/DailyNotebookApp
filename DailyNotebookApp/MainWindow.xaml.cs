@@ -36,6 +36,38 @@ namespace DailyNotebookApp
 
             NotebookDataGrid.ItemsSource = tasks;
             tasks.ListChanged += Tasks_ListChanged;
+
+            NotebookDataGrid.GotMouseCapture += NotebookDataGrid_GotMouseCapture;
+        }
+
+        private void NotebookDataGrid_GotMouseCapture(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (NotebookDataGrid.SelectedItem is Task)
+            {
+                NotebookCalendar.SelectedDates.Clear();
+
+                var task = NotebookDataGrid.SelectedItem as Task;
+
+                ShortDescriptionTextBlock.Text = task.ShortDescription;
+                CompletedCheckBox.IsChecked = task.IsCompleted;
+                CreationDateTextBlock.Text = task.CreationDate;
+
+                FinishToTextBlock.Text = task.FinishToDate;
+                if (DateTime.TryParse(task.FinishToDate, out DateTime finishToDate))
+                {
+                    NotebookCalendar.SelectedDate = finishToDate.Date;
+                }
+
+                PriorityTextBlock.Text = task.Priority.ToString();
+                TypeOfTaskTextBlock.Text = task.TypeOfTask.ToString();
+                DetailedDescriptionTextBlock.Text = task.DetailedDescription;
+
+                if (task.DateRange != null)
+                {
+                    DateRangeTextBlock.Text = task.DateRange.ToString();
+                    HelpService.MarkDateRangeInCalendar(NotebookCalendar, task.DateRange, task.FinishToDate);
+                }
+            }
         }
 
         private void Tasks_ListChanged(object sender, ListChangedEventArgs e)

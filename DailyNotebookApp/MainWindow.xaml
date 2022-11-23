@@ -7,7 +7,9 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="Daily Notebook"
-        Height="680" Width="1135" MinHeight="680" MinWidth="1135" Loaded="Window_Loaded">
+        Height="680" Width="1135" MinHeight="680" MinWidth="1135"
+        WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded">
     <Grid>
         <DataGrid x:Name="NotebookDataGrid" Margin="5,5,310,274" FontSize="16" FontWeight="Bold" AutoGenerateColumns="False" CanUserAddRows="False">
             <DataGrid.Columns>
@@ -29,7 +31,7 @@
             <Button x:Name="EditTaskButton" Content="Edit task" FontSize="16" Width="Auto" Height="Auto"/>
         </StackPanel>
 
-        <GroupBox x:Name="TaskInfoBox" Header="Full information about task" 
+        <GroupBox x:Name="TaskInfoBox" Header="Full information about the task" 
                   FontSize="16" HorizontalAlignment="Stretch" 
                   VerticalAlignment="Bottom" Margin="5,5,310,5" Height="264"
                   Style="{StaticResource MaterialDesignCardGroupBox}">
@@ -51,21 +53,22 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Short task: " FontWeight="Bold"/>
-                <TextBlock x:Name="ShortTaskTextBlock" Grid.Row="0" Grid.Column="1"/>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Short desc.: " FontWeight="Bold"/>
+                <TextBlock x:Name="ShortDescriptionTextBlock" Grid.Row="0" Grid.Column="1"/>
                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Creation date: " FontWeight="Bold"/>
                 <TextBlock x:Name="CreationDateTextBlock" Grid.Row="1" Grid.Column="1"/>
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="Finish to: " FontWeight="Bold"/>
                 <TextBlock x:Name="FinishToTextBlock" Grid.Row="2" Grid.Column="1"/>
-                <TextBlock Grid.Row="3" Grid.Column="0" Text="Done: " FontWeight="Bold"/>
-                <CheckBox x:Name="DoneCheckBox" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center"/>
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Completed: " FontWeight="Bold"/>
+                <CheckBox x:Name="CompletedCheckBox" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center"/>
                 <TextBlock Grid.Row="4" Grid.Column="0" Text="Priority: " FontWeight="Bold"/>
                 <TextBlock x:Name="PriorityTextBlock" Grid.Row="4" Grid.Column="1"/>
                 <TextBlock Grid.Row="5" Grid.Column="0" Text="Type of task: " FontWeight="Bold"/>
                 <TextBlock x:Name="TypeOfTaskTextBlock" Grid.Row="5" Grid.Column="1"/>
 
-                <TextBlock Grid.Row="0" Grid.Column="2" Text="Detailed task: " FontWeight="Bold" Margin="10,0,10,0"/>
-                <TextBlock x:Name="DetailedTaskTextBlock" Grid.Row="1" Grid.Column="2"
+                <TextBlock Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2"
+                           Text="Detailed description: " FontWeight="Bold" Margin="10,0,10,0"/>
+                <TextBlock x:Name="DetailedDescriptionTextBlock" Grid.Row="1" Grid.Column="2"
                            Grid.RowSpan="5" Grid.ColumnSpan="2" 
                            TextWrapping="WrapWithOverflow" Margin="10,0,10,0"/>
 
@@ -87,7 +90,7 @@
             </Grid>
         </GroupBox>
 
-        <Calendar x:Name="ToDoListCalendar" SelectionMode="MultipleRange" 
+        <Calendar x:Name="NotebookCalendar" SelectionMode="MultipleRange" 
                   HorizontalAlignment="Right" VerticalAlignment="Bottom" 
                   Margin="0,0,5,5" Width="300"/>
 
