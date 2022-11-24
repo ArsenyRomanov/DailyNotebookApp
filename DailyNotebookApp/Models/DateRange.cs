@@ -7,19 +7,13 @@ namespace DailyNotebookApp.Models
 		private DateTime start;
         private DateTime end;
 
-        public DateTime Start
-		{
-			get { return start; }
-			private set { start = value; }
-		}
+        public DateTime Start { get; private set; }
 
-		public DateTime End
-		{
-			get { return end; }
-			private set { end = value; }
-		}
+		public DateTime End { get; private set; }
 
-		public DateRange(DateTime start, DateTime end)
+		public DateRange() { }
+
+        public DateRange(DateTime start, DateTime end)
 		{
 			Start = start;
 			End = end;
@@ -32,7 +26,7 @@ namespace DailyNotebookApp.Models
 
         public override string ToString()
         {
-            return Start.ToShortDateString() + " - " + End.ToShortDateString();
+			return Start.ToShortDateString() + " - " + End.ToShortDateString();
         }
     }
 }

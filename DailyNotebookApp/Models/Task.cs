@@ -1,10 +1,13 @@
 ﻿using DailyNotebookApp.Services;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace DailyNotebookApp.Models
 {
-    public class Task : INotifyPropertyChanged
+    public class Task : INotifyPropertyChanged, INotifyDataErrorInfo
     {
         private string shortDescription;
         private bool isCompleted;
@@ -15,34 +18,17 @@ namespace DailyNotebookApp.Models
         private string detailedDescription;
         private DateRange dateRange;
 
-        public string CreationDate
-        {
-            get { return creationDate; }
-            set
-            {
-                creationDate = HelpService.FormatDateTimeOutput(value);
-            }
-        }
+        public bool CanCreate { get; set; } = true;
 
-        public string FinishToDate
-        {
-            get { return finishToDate; }
-            set
-            {
-                finishToDate = HelpService.FormatDateTimeOutput(value);
-            }
-        }
+        public bool HasErrors => propertyErrors.Any();
 
-        public bool IsCompleted
-        {
-            get { return isCompleted; }
-            set
-            {
-                if (isCompleted == value) return;
-                isCompleted = value;
-                OnPropertyChanged($"Property: {nameof(IsCompleted)}");
-            }
-        }
+        private readonly Dictionary<string, List<string>> propertyErrors = new Dictionary<string, List<string>>();
+
+        public string CreationDate { get; set; }
+
+        public string FinishToDate { get; set; }
+
+        public bool IsCompleted { get; set; }
 
         public string ShortDescription
         {
@@ -51,7 +37,18 @@ namespace DailyNotebookApp.Models
             {
                 if (shortDescription == value) return;
                 shortDescription = value;
-                OnPropertyChanged($"Property: {nameof(ShortDescription)}");
+
+                RemoveError(nameof(ShortDescription));
+
+                if (string.IsNullOrWhiteSpace(shortDescription))
+                {
+                    AddError(nameof(ShortDescription), "Short description cannot be empty");
+                }
+
+                if (shortDescription.Length > 50)
+                {
+                    AddError(nameof(ShortDescription), "Short description cannot be of more than 50 symbols");
+                }
             }
         }
 
@@ -88,14 +85,17 @@ namespace DailyNotebookApp.Models
                 {
                     detailedDescription = value;
                 }
+
+                RemoveError(nameof(DetailedDescription));
+
+                if (detailedDescription != null && detailedDescription.Length > 210)
+                {
+                    AddError(nameof(DetailedDescription), "Detailed description cannot be of more than 210 symbols");
+                }
             }
         }
 
-        public DateRange DateRange
-        {
-            get { return dateRange; }
-            set { dateRange = value; }
-        }
+        public DateRange DateRange { get; set; }
 
         public Task()
         {
@@ -103,10 +103,40 @@ namespace DailyNotebookApp.Models
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public IEnumerable GetErrors(string propertyName)
+        {
+            if (propertyErrors.TryGetValue(propertyName, out _))
+                return propertyErrors[propertyName];
+            return default;
+        }
+
+        public void AddError(string propertyName, string errorMessage)
+        {
+            if (!propertyErrors.ContainsKey(propertyName))
+            {
+                propertyErrors.Add(propertyName, new List<string>());
+            }
+
+            propertyErrors[propertyName].Add(errorMessage);
+            OnErrorsChanged(propertyName);
+        }
+
+        public void RemoveError(string propertyName)
+        {
+            if (propertyErrors.Remove(propertyName))
+                OnErrorsChanged(propertyName);
+        }
+
+        private void OnErrorsChanged(string propertyName)
+        {
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
         }
     }
 

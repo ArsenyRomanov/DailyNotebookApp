@@ -17,43 +17,41 @@
 
                 <Grid>
                     <StackPanel Width="422" HorizontalAlignment="Left">
-                        <TextBlock HorizontalAlignment="Left" Margin="0,0,0,21" 
-                           Text="New Task" FontSize="36" FontWeight="Bold" 
-                           Style="{StaticResource MaterialDesignBody1TextBlock}"
-                           Foreground="#FF673AB7"/>
+                        <TextBlock HorizontalAlignment="Left" Margin="0,0,0,21" Text="New Task" FontSize="36" FontWeight="Bold"
+                                   Style="{StaticResource MaterialDesignBody1TextBlock}" Foreground="#FF673AB7"/>
 
-                        <TextBox x:Name="ShortDescriptionTextBox" 
-                         materialDesign:HintAssist.Hint="Short description" FontSize="16" 
-                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                        <TextBox x:Name="ShortDescriptionTextBox" materialDesign:HintAssist.Hint="Short description"
+                                 FontSize="16" Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                 Text="{Binding ShortDescription, UpdateSourceTrigger=PropertyChanged}"/>
                         <Grid>
                             <TextBlock HorizontalAlignment="Left" Margin="0,24,0,0" Text="Finish to: "
-                               Style="{StaticResource MaterialDesignBody1TextBlock}"/>
-                            <DatePicker x:Name="FinishToDatePicker" HorizontalAlignment="Center" 
-                                Margin="0,24,106,0" Width="153" 
-                                IsTodayHighlighted="True" FontSize="16"/>
-                            <TextBox x:Name="FinishToHoursTextBox" HorizontalAlignment="Right" 
-                             materialDesign:HintAssist.Hint="Hours" FontSize="16" 
-                             Margin="0,0,113,0" Width="60" 
-                             Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaxLength="2"/>
-                            <TextBlock HorizontalAlignment="Right" Margin="0,20,85,0" Text="h : " 
-                               Style="{StaticResource MaterialDesignBody1TextBlock}"/>
-                            <TextBox x:Name="FinishToMinutesTextBox" HorizontalAlignment="Right" 
-                             materialDesign:HintAssist.Hint="Minutes" FontSize="16" 
-                             Margin="0,0,20,0" Width="60" 
-                             Style="{StaticResource MaterialDesignFloatingHintTextBox}" MaxLength="2"/>
-                            <TextBlock HorizontalAlignment="Right" Margin="0,20,0,0" Text="m" 
-                               Style="{StaticResource MaterialDesignBody1TextBlock}"/>
+                                       Style="{StaticResource MaterialDesignBody1TextBlock}"/>
+                            <DatePicker x:Name="FinishToDatePicker" HorizontalAlignment="Center"
+                                        Margin="0,24,106,0" Width="153"
+                                        IsTodayHighlighted="True" FontSize="16"/>
+                            <TextBox x:Name="FinishToHoursTextBox" HorizontalAlignment="Right"
+                                     materialDesign:HintAssist.Hint="Hours" FontSize="16"
+                                     Margin="0,0,113,0" Width="60" MaxLength="2"
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                            <TextBlock HorizontalAlignment="Right" Margin="0,20,85,0" Text="h : "
+                                       Style="{StaticResource MaterialDesignBody1TextBlock}"/>
+                            <TextBox x:Name="FinishToMinutesTextBox" HorizontalAlignment="Right"
+                                     materialDesign:HintAssist.Hint="Minutes" FontSize="16"
+                                     Margin="0,0,20,0" Width="60" MaxLength="2"
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                            <TextBlock HorizontalAlignment="Right" Margin="0,20,0,0" Text="m"
+                                       Style="{StaticResource MaterialDesignBody1TextBlock}"/>
                         </Grid>
                         <Grid Margin="0,20,0,0">
                             <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Text="Priority: "
-                               Style="{StaticResource MaterialDesignBody1TextBlock}"/>
-                            <ComboBox x:Name="PriorityComboBox" HorizontalAlignment="Right" 
-                              Width="200" Height="40" FontSize="16">
+                                       Style="{StaticResource MaterialDesignBody1TextBlock}"/>
+                            <ComboBox x:Name="PriorityComboBox" HorizontalAlignment="Right"
+                                      Width="200" Height="40" FontSize="16">
                             </ComboBox>
                         </Grid>
                         <Grid Margin="0,20,0,0">
-                            <TextBlock HorizontalAlignment="Left" Text="Type of task: "
-                               Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="0,5,0,0"/>
+                            <TextBlock HorizontalAlignment="Left" Margin="0,5,0,0" Text="Type of task: "
+                                       Style="{StaticResource MaterialDesignBody1TextBlock}"/>
                             <ComboBox x:Name="TypeOfTaskComboBox" HorizontalAlignment="Right"
                                       Width="200" Height="40" FontSize="16">
                             </ComboBox>
@@ -67,47 +65,49 @@
                         </StackPanel>
 
                         <Grid Margin="0,20,0,0">
-                            <Button x:Name="СreateButton" 
-                        Width="74" Height="30" Margin="5,5,0,5" HorizontalAlignment="Right" 
-                        Content="Create" Click="СreateButton_Click"/>
-                            <Button x:Name="CancelButton" 
-                        Width="74" Height="30" Margin="5,5,94,5" HorizontalAlignment="Right" 
-                        Content="Cancel" Click="CancelButton_Click"/>
+                            <Button x:Name="СreateButton" Width="74" Height="30"
+                                    Margin="5,5,0,5" HorizontalAlignment="Right"
+                                    Content="Create" Click="СreateButton_Click"/>
+                            <Button x:Name="CancelButton" Width="74" Height="30"
+                                    Margin="5,5,94,5" HorizontalAlignment="Right"
+                                    Content="Cancel" Click="CancelButton_Click"/>
                         </Grid>
                     </StackPanel>
 
-                    <Expander x:Name="AdditionalInfoExpander" HorizontalAlignment="Right" 
-                          Padding="5" ExpandDirection="Right" Expanded="AdditionalInfoExpander_Expanded" Collapsed="AdditionalInfoExpander_Collapsed">
+                    <Expander x:Name="AdditionalInfoExpander" HorizontalAlignment="Right"
+                              Padding="5" ExpandDirection="Right"
+                              Expanded="AdditionalInfoExpander_Expanded"
+                              Collapsed="AdditionalInfoExpander_Collapsed">
                         <StackPanel MinWidth="412">
-                            <TextBox x:Name="DetailedDescriptionTextBox" Height="120" 
-                                 SpellCheck.IsEnabled="True" TextWrapping="Wrap" 
-                                 materialDesign:HintAssist.Hint="Detailed task" FontSize="16" 
-                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="412"/>
+                            <TextBox x:Name="DetailedDescriptionTextBox" Height="120"
+                                     SpellCheck.IsEnabled="True" TextWrapping="Wrap"
+                                     materialDesign:HintAssist.Hint="Detailed task" FontSize="16"
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}" Width="412"
+                                     Text="{Binding DetailedDescription, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <Grid>
-                                <TextBlock HorizontalAlignment="Left" Margin="0,24,0,0" Text="Date range: " 
-                                       Style="{StaticResource MaterialDesignBody1TextBlock}"/>
-                                <DatePicker x:Name="DateRangeFirstDateDatePicker" HorizontalAlignment="Center" 
-                                        Margin="0,24,30,0" Width="120" 
-                                        IsTodayHighlighted="True" FontSize="16"/>
-                                <TextBlock HorizontalAlignment="Right" Margin="0,24,137,0" Text="-" 
-                                       Style="{StaticResource MaterialDesignBody1TextBlock}"/>
-                                <DatePicker x:Name="DateRangeLastDateDatePicker" HorizontalAlignment="Right" 
-                                        Margin="0,24,0,0" Width="120" 
-                                        IsTodayHighlighted="True" FontSize="16"/>
+                                <TextBlock HorizontalAlignment="Left" Margin="0,24,0,0" Text="Date range: "
+                                           Style="{StaticResource MaterialDesignBody1TextBlock}"/>
+                                <DatePicker x:Name="DateRangeFirstDatePicker" HorizontalAlignment="Center"
+                                            Margin="0,24,30,0" Width="120"
+                                            IsTodayHighlighted="True" FontSize="16"/>
+                                <TextBlock HorizontalAlignment="Right" Margin="0,24,137,0" Text="-"
+                                           Style="{StaticResource MaterialDesignBody1TextBlock}"/>
+                                <DatePicker x:Name="DateRangeLastDatePicker" HorizontalAlignment="Right"
+                                            Margin="0,24,0,0" Width="120"
+                                            IsTodayHighlighted="True" FontSize="16"/>
                             </Grid>
 
                             <Grid Margin="0,10,0,0">
-                                <TextBlock Text="Subtasks: " HorizontalAlignment="Left" 
-                                       Style="{StaticResource MaterialDesignBody1TextBlock}"/>
-                                <TextBlock Text="(Set more information for subtasks:" 
-                                       HorizontalAlignment="Right" Margin="0,7,30,0" 
-                                       Style="{StaticResource MaterialDesignBody2TextBlock}"/>
-                                <CheckBox x:Name="SubtasksMoreInfoCheckBox" 
-                                      HorizontalAlignment="Right" Margin="0,0,7,0"/>
-                                <TextBlock Text=")" 
-                                       HorizontalAlignment="Right" Margin="0,7,0,0" 
-                                       Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                                <TextBlock Text="Subtasks: " HorizontalAlignment="Left"
+                                           Style="{StaticResource MaterialDesignBody1TextBlock}"/>
+                                <TextBlock Text="(Set more information for subtasks:"
+                                           HorizontalAlignment="Right" Margin="0,7,30,0"
+                                           Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                                <CheckBox x:Name="SubtasksMoreInfoCheckBox"
+                                          HorizontalAlignment="Right" Margin="0,0,7,0"/>
+                                <TextBlock Text=")" HorizontalAlignment="Right" Margin="0,7,0,0"
+                                           Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                             </Grid>
 
                             <ScrollViewer MaxHeight="170">

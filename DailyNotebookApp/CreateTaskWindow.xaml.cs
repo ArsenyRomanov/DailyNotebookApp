@@ -2,6 +2,8 @@
 using DailyNotebookApp.Services;
 using System;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace DailyNotebookApp
 {
@@ -16,25 +18,40 @@ namespace DailyNotebookApp
         {
             InitializeComponent();
             NewTask = newTask;
+            NewTask.DateRange = new DateRange();
+            DataContext = NewTask;
+
+            this.Resources.Add("daterange", NewTask.DateRange);
+
+            Binding binding = new Binding();
+            binding.Source = NewTask;
+            binding.Path = new PropertyPath("Start");
+            DateRangeFirstDatePicker.SetBinding(DatePicker.SelectedDateProperty, binding);
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
+            NewTask.CanCreate = false;
             Close();
         }
 
         private void СreateButton_Click(object sender, RoutedEventArgs e)
         {
-            NewTask.ShortDescription = ShortDescriptionTextBox.Text;
-            NewTask.IsCompleted = false;
-            NewTask.CreationDate = CreationDateTextBlock.Text;
-            NewTask.FinishToDate = CheckNAssignService.CheckNAssignFinishTo(FinishToDatePicker, FinishToHoursTextBox, FinishToMinutesTextBox);
-            NewTask.Priority = (PriorityEnum)PriorityComboBox.SelectedItem;
-            NewTask.TypeOfTask = (TypeOfTaskEnum)TypeOfTaskComboBox.SelectedItem;
-            NewTask.DetailedDescription = DetailedDescriptionTextBox.Text;
-            NewTask.DateRange = new DateRange(DateRangeFirstDateDatePicker.SelectedDate.Value, DateRangeLastDateDatePicker.SelectedDate.Value);
+            if (!NewTask.HasErrors)
+            {
+                NewTask.ShortDescription = ShortDescriptionTextBox.Text;
+                NewTask.IsCompleted = false;
+                NewTask.CreationDate = CreationDateTextBlock.Text;
+                NewTask.FinishToDate = CheckNAssignService.CheckNAssignFinishTo(FinishToDatePicker, FinishToHoursTextBox, FinishToMinutesTextBox);
+                NewTask.Priority = (PriorityEnum)PriorityComboBox.SelectedItem;
+                NewTask.TypeOfTask = (TypeOfTaskEnum)TypeOfTaskComboBox.SelectedItem;
+                NewTask.DetailedDescription = DetailedDescriptionTextBox.Text;
+                NewTask.DateRange = CheckNAssignService.CheckNAssignDateRange(DateRangeFirstDatePicker.SelectedDate, DateRangeLastDatePicker.SelectedDate);
 
-            Close();
+                Close();
+            }
+            else
+                NewTask.CanCreate = false;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

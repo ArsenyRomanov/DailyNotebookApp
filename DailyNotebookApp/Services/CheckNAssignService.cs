@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DailyNotebookApp.Models;
+using System;
 using System.Windows.Controls;
 
 namespace DailyNotebookApp.Services
@@ -25,6 +26,15 @@ namespace DailyNotebookApp.Services
             }
 
             return "-";
+        }
+
+        public static DateRange CheckNAssignDateRange(DateTime? start, DateTime? end)
+        {
+            if (start != null && end != null)
+            {
+                return new DateRange(start.Value, end.Value);
+            }
+            return null;
         }
     }
 }

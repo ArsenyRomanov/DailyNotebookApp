@@ -51,22 +51,16 @@ namespace DailyNotebookApp
                 ShortDescriptionTextBlock.Text = task.ShortDescription;
                 CompletedCheckBox.IsChecked = task.IsCompleted;
                 CreationDateTextBlock.Text = task.CreationDate;
-
                 FinishToTextBlock.Text = task.FinishToDate;
-                if (DateTime.TryParse(task.FinishToDate, out DateTime finishToDate))
-                {
-                    NotebookCalendar.SelectedDate = finishToDate.Date;
-                }
-
                 PriorityTextBlock.Text = task.Priority.ToString();
                 TypeOfTaskTextBlock.Text = task.TypeOfTask.ToString();
                 DetailedDescriptionTextBlock.Text = task.DetailedDescription;
+                DateRangeTextBlock.Text = task.DateRange != null ? task.DateRange.ToString() : "-";
 
                 if (task.DateRange != null)
-                {
-                    DateRangeTextBlock.Text = task.DateRange.ToString();
                     HelpService.MarkDateRangeInCalendar(NotebookCalendar, task.DateRange, task.FinishToDate);
-                }
+                else if (DateTime.TryParse(task.FinishToDate, out DateTime finishToDate))
+                    NotebookCalendar.SelectedDate = finishToDate.Date;
             }
         }
 
@@ -92,7 +86,7 @@ namespace DailyNotebookApp
             var newTask = new Task();
             var createTaskWindow = new CreateTaskWindow(newTask);
             createTaskWindow.ShowDialog();
-            if (!string.IsNullOrWhiteSpace(newTask.ShortDescription))
+            if (newTask.CanCreate)
             {
                 tasks.Add(newTask);
             }
