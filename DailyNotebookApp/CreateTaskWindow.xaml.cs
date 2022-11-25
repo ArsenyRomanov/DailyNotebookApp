@@ -1,9 +1,11 @@
 ﻿using DailyNotebookApp.Models;
 using DailyNotebookApp.Services;
 using System;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Interop;
 
 namespace DailyNotebookApp
 {
@@ -18,15 +20,21 @@ namespace DailyNotebookApp
         {
             InitializeComponent();
             NewTask = newTask;
-            NewTask.DateRange = new DateRange();
             DataContext = NewTask;
+            DateRangeGrid.DataContext = NewTask.DateRange;
 
-            this.Resources.Add("daterange", NewTask.DateRange);
+            ShortDescriptionTextBox.GotKeyboardFocus += ElementGotKeyboardFocus;
+            FinishToDatePicker.GotKeyboardFocus += ElementGotKeyboardFocus;
+            DateRangeFirstDatePicker.GotKeyboardFocus += ElementGotKeyboardFocus;
+            DateRangeLastDatePicker.GotKeyboardFocus += ElementGotKeyboardFocus;
+        }
 
-            Binding binding = new Binding();
-            binding.Source = NewTask;
-            binding.Path = new PropertyPath("Start");
-            DateRangeFirstDatePicker.SetBinding(DatePicker.SelectedDateProperty, binding);
+        private void ElementGotKeyboardFocus(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
+        {
+            HelpService.UpdateProperty(NewTask, nameof(NewTask.ShortDescription));
+            HelpService.UpdateProperty(NewTask, nameof(NewTask.FinishToDate));
+            HelpService.UpdateProperty(NewTask.DateRange, nameof(NewTask.DateRange.Start));
+            HelpService.UpdateProperty(NewTask.DateRange, nameof(NewTask.DateRange.End));
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -37,16 +45,25 @@ namespace DailyNotebookApp
 
         private void СreateButton_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(ShortDescriptionTextBox.Text) && !NewTask.HasErrors)
+            {
+                HelpService.UpdateProperty(NewTask, nameof(NewTask.ShortDescription));
+            }
+
             if (!NewTask.HasErrors)
             {
+                NewTask.CanCreate = true;
                 NewTask.ShortDescription = ShortDescriptionTextBox.Text;
                 NewTask.IsCompleted = false;
                 NewTask.CreationDate = CreationDateTextBlock.Text;
-                NewTask.FinishToDate = CheckNAssignService.CheckNAssignFinishTo(FinishToDatePicker, FinishToHoursTextBox, FinishToMinutesTextBox);
+                NewTask.FinishToDate = CheckNAssignService.CheckNAssignFinishTo(FinishToDatePicker,
+                                                                                FinishToHoursTextBox,
+                                                                                FinishToMinutesTextBox);
                 NewTask.Priority = (PriorityEnum)PriorityComboBox.SelectedItem;
                 NewTask.TypeOfTask = (TypeOfTaskEnum)TypeOfTaskComboBox.SelectedItem;
                 NewTask.DetailedDescription = DetailedDescriptionTextBox.Text;
-                NewTask.DateRange = CheckNAssignService.CheckNAssignDateRange(DateRangeFirstDatePicker.SelectedDate, DateRangeLastDatePicker.SelectedDate);
+                NewTask.DateRange = CheckNAssignService.CheckNAssignDateRange(DateRangeFirstDatePicker.SelectedDate,
+                                                                              DateRangeLastDatePicker.SelectedDate);
 
                 Close();
             }

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 
 namespace DailyNotebookApp.Models
@@ -20,13 +21,31 @@ namespace DailyNotebookApp.Models
 
         public bool CanCreate { get; set; } = true;
 
-        public bool HasErrors => propertyErrors.Any();
+        public bool HasErrors
+        {
+            get
+            {
+                if (!propertyErrors.Any() && DateRange != null && !DateRange.HasErrors)
+                    return false;
+                return true;
+            }
+        }
 
         private readonly Dictionary<string, List<string>> propertyErrors = new Dictionary<string, List<string>>();
 
         public string CreationDate { get; set; }
 
-        public string FinishToDate { get; set; }
+        public string FinishToDate
+        {
+            get { return finishToDate; }
+            set
+            {
+                finishToDate = value;
+                RemoveError(nameof(FinishToDate));
+                if (string.IsNullOrWhiteSpace(finishToDate) && DateRange != null && DateRange.End != null)
+                    AddError(nameof(FinishToDate), "End date in range specified, specify the Finish To Date");
+            }
+        }
 
         public bool IsCompleted { get; set; }
 
@@ -45,9 +64,9 @@ namespace DailyNotebookApp.Models
                     AddError(nameof(ShortDescription), "Short description cannot be empty");
                 }
 
-                if (shortDescription.Length > 50)
+                if (shortDescription.Length < 3 || shortDescription.Length > 50)
                 {
-                    AddError(nameof(ShortDescription), "Short description cannot be of more than 50 symbols");
+                    AddError(nameof(ShortDescription), "Short description should be between 3 and 50 symbols");
                 }
             }
         }
@@ -100,6 +119,7 @@ namespace DailyNotebookApp.Models
         public Task()
         {
             CreationDate = HelpService.FormatDateTimeOutput();
+            DateRange = new DateRange();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
