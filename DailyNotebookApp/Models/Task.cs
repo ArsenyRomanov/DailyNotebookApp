@@ -3,8 +3,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
+using System.Windows.Data;
 
 namespace DailyNotebookApp.Models
 {
@@ -13,11 +13,16 @@ namespace DailyNotebookApp.Models
         private string shortDescription;
         private bool isCompleted;
         private string creationDate;
-        private string finishToDate;
+        //private string finishTo;
+        private DateTime? finishToDate;
+        private double? finishToHour;
+        private double? finishToMinutes;
         private PriorityEnum priority;
         private TypeOfTaskEnum typeOfTask;
         private string detailedDescription;
         private DateRange dateRange;
+
+        private readonly Dictionary<string, List<string>> propertyErrors = new Dictionary<string, List<string>>();
 
         public bool CanCreate { get; set; } = false;
 
@@ -27,27 +32,67 @@ namespace DailyNotebookApp.Models
             {
                 if (!propertyErrors.Any() && DateRange != null && !DateRange.HasErrors)
                     return false;
-                return true;
+                else
+                    return true;
             }
         }
 
-        private readonly Dictionary<string, List<string>> propertyErrors = new Dictionary<string, List<string>>();
-
         public string CreationDate { get; set; }
 
-        public string FinishToDate
+        public string FinishTo { get; set; }
+
+        public DateTime? FinishToDate
         {
             get { return finishToDate; }
             set
             {
                 finishToDate = value;
+                DateRange.FinishToDate = finishToDate;
                 RemoveError(nameof(FinishToDate));
-                if (string.IsNullOrWhiteSpace(finishToDate) && DateRange != null && DateRange.End != null)
-                    AddError(nameof(FinishToDate), "End date in range specified, specify the Finish To Date");
+                if (finishToDate < DateTime.Parse(CreationDate))
+                    AddError(nameof(FinishToDate), "Finish to date cannot be earlier than creation date");
+                if (FinishToHour != null || FinishToMinutes != null)
+                    AddError(nameof(FinishToDate), "Finish To time is specified, specify Finish To date");
+                if ((DateRange.Start != null || DateRange.End != null) && finishToDate == null)
+                    AddError(nameof(FinishToDate), "Date range is specified, specify Finish To date");
             }
         }
 
-        public bool IsCompleted { get; set; }
+        public double? FinishToHour
+        {
+            get { return finishToHour; }
+            set
+            {
+                finishToHour = value;
+                RemoveError(nameof(FinishToHour));
+                if (finishToHour < 0 || finishToHour > 24)
+                    AddError(nameof(FinishToHour), "Invalid hour input");
+                if (FinishToMinutes != null && finishToHour == null)
+                    AddError(nameof(FinishToHour), "Finish To minutes is specified, specify Finish To hour");
+            }
+        }
+
+        public double? FinishToMinutes
+        {
+            get { return finishToMinutes; }
+            set
+            {
+                finishToMinutes = value;
+                RemoveError(nameof(FinishToMinutes));
+                if (finishToMinutes < 0 || finishToMinutes > 60)
+                    AddError(nameof(FinishToMinutes), "Invalid minutes input");
+            }
+        }
+
+        public bool IsCompleted
+        {
+            get { return isCompleted; }
+            set
+            {
+                isCompleted = value;
+                OnPropertyChanged(nameof(IsCompleted));
+            }
+        }
 
         public string ShortDescription
         {
@@ -119,7 +164,7 @@ namespace DailyNotebookApp.Models
         public Task()
         {
             CreationDate = HelpService.FormatDateTimeOutput();
-            DateRange = new DateRange();
+            DateRange = new DateRange(CreationDate);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

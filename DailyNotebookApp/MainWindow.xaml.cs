@@ -49,15 +49,15 @@ namespace DailyNotebookApp
                 ShortDescriptionTextBlock.Text = task.ShortDescription;
                 CompletedCheckBox.IsChecked = task.IsCompleted;
                 CreationDateTextBlock.Text = task.CreationDate;
-                FinishToTextBlock.Text = task.FinishToDate;
+                FinishToTextBlock.Text = task.FinishTo;
                 PriorityTextBlock.Text = task.Priority.ToString();
                 TypeOfTaskTextBlock.Text = task.TypeOfTask.ToString();
                 DetailedDescriptionTextBlock.Text = task.DetailedDescription;
                 DateRangeTextBlock.Text = task.DateRange != null ? task.DateRange.ToString() : "-";
 
                 if (task.DateRange != null)
-                    HelpService.MarkDateRangeInCalendar(NotebookCalendar, task.DateRange, task.FinishToDate);
-                else if (DateTime.TryParse(task.FinishToDate, out DateTime finishToDate))
+                    HelpService.MarkDateRangeInCalendar(NotebookCalendar, task.DateRange, task.FinishTo);
+                else if (DateTime.TryParse(task.FinishTo, out DateTime finishToDate))
                     NotebookCalendar.SelectedDate = finishToDate.Date;
             }
             else

@@ -1,11 +1,10 @@
 ﻿using DailyNotebookApp.Models;
 using DailyNotebookApp.Services;
 using System;
-using System.Runtime.InteropServices;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Interop;
+using System.Windows.Input;
 
 namespace DailyNotebookApp
 {
@@ -25,6 +24,11 @@ namespace DailyNotebookApp
 
             ShortDescriptionTextBox.GotKeyboardFocus += ElementGotKeyboardFocus;
             FinishToDatePicker.GotKeyboardFocus += ElementGotKeyboardFocus;
+            FinishToHoursTextBox.GotKeyboardFocus += ElementGotKeyboardFocus;
+            FinishToMinutesTextBox.GotKeyboardFocus += ElementGotKeyboardFocus;
+            PriorityComboBox.GotKeyboardFocus += ElementGotKeyboardFocus;
+            TypeOfTaskComboBox.GotKeyboardFocus += ElementGotKeyboardFocus;
+            DetailedDescriptionTextBox.GotKeyboardFocus += ElementGotKeyboardFocus;
             DateRangeFirstDatePicker.GotKeyboardFocus += ElementGotKeyboardFocus;
             DateRangeLastDatePicker.GotKeyboardFocus += ElementGotKeyboardFocus;
         }
@@ -33,6 +37,8 @@ namespace DailyNotebookApp
         {
             HelpService.UpdateProperty(NewTask, nameof(NewTask.ShortDescription));
             HelpService.UpdateProperty(NewTask, nameof(NewTask.FinishToDate));
+            HelpService.UpdateProperty(NewTask, nameof(NewTask.FinishToHour));
+            HelpService.UpdateProperty(NewTask, nameof(NewTask.FinishToMinutes));
             HelpService.UpdateProperty(NewTask.DateRange, nameof(NewTask.DateRange.Start));
             HelpService.UpdateProperty(NewTask.DateRange, nameof(NewTask.DateRange.End));
         }
@@ -52,15 +58,12 @@ namespace DailyNotebookApp
             if (!NewTask.HasErrors)
             {
                 NewTask.CanCreate = true;
-                NewTask.ShortDescription = ShortDescriptionTextBox.Text;
                 NewTask.IsCompleted = false;
-                NewTask.CreationDate = CreationDateTextBlock.Text;
-                NewTask.FinishToDate = CheckNAssignService.CheckNAssignFinishTo(FinishToDatePicker,
-                                                                                FinishToHoursTextBox,
-                                                                                FinishToMinutesTextBox);
+                NewTask.FinishTo = CheckNAssignService.CheckNAssignFinishTo(NewTask.FinishToDate,
+                                                                            NewTask.FinishToHour,
+                                                                            NewTask.FinishToMinutes);
                 NewTask.Priority = (PriorityEnum)PriorityComboBox.SelectedItem;
                 NewTask.TypeOfTask = (TypeOfTaskEnum)TypeOfTaskComboBox.SelectedItem;
-                NewTask.DetailedDescription = DetailedDescriptionTextBox.Text;
                 NewTask.DateRange = CheckNAssignService.CheckNAssignDateRange(DateRangeFirstDatePicker.SelectedDate,
                                                                               DateRangeLastDatePicker.SelectedDate);
 
@@ -70,7 +73,7 @@ namespace DailyNotebookApp
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            CreationDateTextBlock.Text = HelpService.FormatDateTimeOutput();
+            CreationDateTextBlock.Text = NewTask.CreationDate;
             PriorityComboBox.ItemsSource = Enum.GetValues(typeof(PriorityEnum));
             PriorityComboBox.SelectedItem = PriorityEnum.None;
             TypeOfTaskComboBox.ItemsSource = Enum.GetValues(typeof(TypeOfTaskEnum));
@@ -85,6 +88,29 @@ namespace DailyNotebookApp
         private void AdditionalInfoExpander_Collapsed(object sender, RoutedEventArgs e)
         {
             Width -= 422;
+        }
+
+        private void FinishToHoursTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!double.TryParse((sender as TextBox).Text, out _))
+                (sender as TextBox).Text = null;
+
+            if ((sender as TextBox).Text.Length == 2)
+            {
+                FinishToMinutesTextBox.Focus();
+                FinishToMinutesTextBox.Select(0, 0);
+            }
+        }
+
+        private void FinishToMinutesTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!double.TryParse((sender as TextBox).Text, out _))
+                (sender as TextBox).Text = null;
+
+            if ((sender as TextBox).Text.Length == 2)
+            {
+                Keyboard.ClearFocus();
+            }
         }
     }
 }

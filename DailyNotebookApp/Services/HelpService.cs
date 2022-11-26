@@ -45,7 +45,12 @@ namespace DailyNotebookApp.Services
             if (prevValue != null)
                 propertyInfo.SetValue(task, prevValue);
             else
-                propertyInfo.SetValue(task, string.Empty);
+            {
+                if (propertyInfo.PropertyType == typeof(string))
+                    propertyInfo.SetValue(task, string.Empty);
+                if (propertyInfo.PropertyType == typeof(DateTime?) || propertyInfo.PropertyType == typeof(double?))
+                    propertyInfo.SetValue(task, null);
+            }
         }
 
         public static void UpdateProperty(DateRange dateRange, string propertyName)

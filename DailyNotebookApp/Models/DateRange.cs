@@ -10,6 +10,9 @@ namespace DailyNotebookApp.Models
     {
 		private DateTime? start;
         private DateTime? end;
+        private string CreationDate { get; set; }
+        public DateTime? FinishToDate { get; set; }
+
         public bool HasErrors => propertyErrors.Any();
 
         private readonly Dictionary<string, List<string>> propertyErrors = new Dictionary<string, List<string>>();
@@ -25,6 +28,10 @@ namespace DailyNotebookApp.Models
                     AddError(nameof(Start), "End date in range specified, specify the start date");
                 if (start >= End)
                     AddError(nameof(Start), "Start date in range cannot be later than the end date");
+                if (start < DateTime.Parse(CreationDate))
+                    AddError(nameof(Start), "Start date in range cannot be earlier than the creation date");
+                if (FinishToDate != null && (start > FinishToDate))
+                    AddError(nameof(Start), "Start date in range cannot be later than the Finish To date");
             }
         }
 
@@ -39,12 +46,19 @@ namespace DailyNotebookApp.Models
                     AddError(nameof(End), "Start date in range specified, specify the end date");
                 if (end <= Start)
                     AddError(nameof(End), "End date in range cannot be earlier than the start date");
+                if (end < DateTime.Parse(CreationDate))
+                    AddError(nameof(End), "End date in range cannot be earlier than the creation date");
+                if (FinishToDate != null && (end > FinishToDate))
+                    AddError(nameof(End), "End date in range cannot be later than the Finish To date");
             }
         }
 
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
-        public DateRange() { }
+        public DateRange(string creationDate)
+        {
+            CreationDate = creationDate;
+        }
 
         public DateRange(DateTime start, DateTime end)
 		{

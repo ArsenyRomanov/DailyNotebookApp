@@ -6,19 +6,19 @@ namespace DailyNotebookApp.Services
 {
     public class CheckNAssignService
     {
-        public static string CheckNAssignFinishTo(DatePicker finishToDatePicker, TextBox finishToHoursTextBox, TextBox finishToMinutesTextBox)
+        public static string CheckNAssignFinishTo(DateTime? finishToDate, double? finishToHour, double? finishToMinutes)
         {
-            if (finishToDatePicker.SelectedDate != null)
+            if (finishToDate != null)
             {
-                var result = finishToDatePicker.SelectedDate.Value;
+                var result = finishToDate.Value;
 
-                if (!string.IsNullOrWhiteSpace(finishToHoursTextBox.Text))
+                if (finishToHour != null)
                 {
-                    result = result.AddHours(double.Parse(finishToHoursTextBox.Text));
+                    result = result.AddHours(finishToHour.Value);
 
-                    if (!string.IsNullOrWhiteSpace(finishToMinutesTextBox.Text))
+                    if (finishToMinutes != null)
                     {
-                        result = result.AddMinutes(double.Parse(finishToMinutesTextBox.Text));
+                        result = result.AddMinutes(finishToMinutes.Value);
                     }
                 }
 

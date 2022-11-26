@@ -16,7 +16,7 @@
                 <DataGridTextColumn Header="Creation date" Width="165" IsReadOnly="True" CanUserResize="False"
                                     Binding="{Binding Path=CreationDate}"/>
                 <DataGridTextColumn Header="Finish to" Width="165" IsReadOnly="True" CanUserResize="False"
-                                    Binding="{Binding Path=FinishToDate}"/>
+                                    Binding="{Binding Path=FinishTo}"/>
                 <DataGridTextColumn Header="Short description" Width="*" IsReadOnly="True" CanUserResize="False"
                                     Binding="{Binding Path=ShortDescription}"/>
                 <DataGridCheckBoxColumn Header="Done" IsReadOnly="False" CanUserResize="False"

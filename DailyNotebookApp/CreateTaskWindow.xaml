@@ -33,13 +33,15 @@
                             <TextBox x:Name="FinishToHoursTextBox" HorizontalAlignment="Right"
                                      materialDesign:HintAssist.Hint="Hours" FontSize="16"
                                      Margin="0,0,113,0" Width="60" MaxLength="2"
-                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                     Text="{Binding FinishToHour, UpdateSourceTrigger=PropertyChanged}" TextChanged="FinishToHoursTextBox_TextChanged"/>
                             <TextBlock HorizontalAlignment="Right" Margin="0,20,85,0" Text="h : "
                                        Style="{StaticResource MaterialDesignBody1TextBlock}"/>
                             <TextBox x:Name="FinishToMinutesTextBox" HorizontalAlignment="Right"
                                      materialDesign:HintAssist.Hint="Minutes" FontSize="16"
                                      Margin="0,0,20,0" Width="60" MaxLength="2"
-                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                     Text="{Binding FinishToMinutes, UpdateSourceTrigger=PropertyChanged}" TextChanged="FinishToMinutesTextBox_TextChanged"/>
                             <TextBlock HorizontalAlignment="Right" Margin="0,20,0,0" Text="m"
                                        Style="{StaticResource MaterialDesignBody1TextBlock}"/>
                         </Grid>
