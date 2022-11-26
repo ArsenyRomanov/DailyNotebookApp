@@ -39,7 +39,6 @@ namespace DailyNotebookApp
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            NewTask.CanCreate = false;
             Close();
         }
 
@@ -67,8 +66,6 @@ namespace DailyNotebookApp
 
                 Close();
             }
-            else
-                NewTask.CanCreate = false;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

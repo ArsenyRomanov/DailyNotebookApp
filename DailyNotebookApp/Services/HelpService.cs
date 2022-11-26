@@ -1,12 +1,10 @@
 ﻿using DailyNotebookApp.Models;
 using System;
-using System.Diagnostics;
-using System.Reflection.Emit;
 using System.Windows.Controls;
 
 namespace DailyNotebookApp.Services
 {
-    public class HelpService
+    public static class HelpService
     {
         public static string FormatDateTimeOutput()
         {
@@ -52,8 +50,8 @@ namespace DailyNotebookApp.Services
 
         public static void UpdateProperty(DateRange dateRange, string propertyName)
         {
-            var taskType = typeof(DateRange);
-            var propertyInfo = taskType.GetProperty(propertyName);
+            var dateRangeType = typeof(DateRange);
+            var propertyInfo = dateRangeType.GetProperty(propertyName);
             var prevValue = propertyInfo.GetValue(dateRange);
             propertyInfo.SetValue(dateRange, prevValue);
         }

@@ -19,7 +19,7 @@ namespace DailyNotebookApp.Models
         private string detailedDescription;
         private DateRange dateRange;
 
-        public bool CanCreate { get; set; } = true;
+        public bool CanCreate { get; set; } = false;
 
         public bool HasErrors
         {
