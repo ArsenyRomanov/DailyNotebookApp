@@ -1,5 +1,7 @@
 ﻿using DailyNotebookApp.Models;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Controls;
 
 namespace DailyNotebookApp.Services
@@ -59,6 +61,20 @@ namespace DailyNotebookApp.Services
             var propertyInfo = dateRangeType.GetProperty(propertyName);
             var prevValue = propertyInfo.GetValue(dateRange);
             propertyInfo.SetValue(dateRange, prevValue);
+        }
+
+        public static IEnumerable<Task> FilterCollection(IEnumerable<Task> collection, string shortTask, DateTime? finishTo, DateTime? creationDate)
+        {
+            var filteredCollection = collection;
+
+            if (!string.IsNullOrWhiteSpace(shortTask))
+                filteredCollection = filteredCollection.Where(item => item.ShortDescription.Contains(shortTask));
+            if (finishTo != null)
+                filteredCollection = filteredCollection.Where(item => item.FinishToDate == finishTo);
+            if (creationDate != null)
+                filteredCollection = filteredCollection.Where(item => DateTime.Parse(item.CreationDate.Substring(0, 10)) == creationDate);
+
+            return filteredCollection;
         }
     }
 }

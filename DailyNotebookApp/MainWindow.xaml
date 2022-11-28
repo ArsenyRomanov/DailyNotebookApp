@@ -9,7 +9,7 @@
         Title="Daily Notebook"
         Height="680" Width="1135" MinHeight="680" MinWidth="1135"
         WindowStartupLocation="CenterScreen"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded" SizeChanged="Window_SizeChanged">
     <Grid>
         <DataGrid x:Name="NotebookDataGrid" Margin="5,5,310,274" FontSize="16" FontWeight="Bold" AutoGenerateColumns="False" CanUserAddRows="False">
             <DataGrid.Columns>
@@ -103,15 +103,18 @@
                         HorizontalAlignment="Right" Margin="0,5,0,0"
                         Style="{StaticResource MaterialDesignFlatButton}" Height="Auto"/>
             </Grid>
-            <TextBox x:Name="FiltersShortTaskTextBox" 
-                     materialDesign:HintAssist.Hint="Short task contains" FontSize="14"
-                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
-            <DatePicker x:Name="FiltersFinishDateDatePicker" 
+            <TextBox x:Name="FiltersShortDescription"
+                     materialDesign:HintAssist.Hint="Short description contains" FontSize="14"
+                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                     TextChanged="FiltersShortDescriptionTextBox_TextChanged"/>
+            <DatePicker x:Name="FiltersFinishTo" 
                         materialDesign:HintAssist.Hint="Finish date contains" 
-                        FontSize="14" Height="46"/>
-            <DatePicker x:Name="FiltersCreationDateDatePicker" 
+                        FontSize="14" Height="46"
+                        SelectedDateChanged="FiltersFinishTo_SelectedDateChanged"/>
+            <DatePicker x:Name="FiltersCreationDate" 
                         materialDesign:HintAssist.Hint="Creation date contains" 
-                        FontSize="14" Height="46" Visibility="Hidden"/>
+                        FontSize="14" Height="46" Visibility="Hidden"
+                        SelectedDateChanged="FiltersCreationDate_SelectedDateChanged"/>
         </StackPanel>
 
         <StackPanel x:Name="LastActionsStackPanel" HorizontalAlignment="Right" 

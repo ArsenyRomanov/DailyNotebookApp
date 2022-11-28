@@ -51,7 +51,7 @@ namespace DailyNotebookApp.Models
                 RemoveError(nameof(FinishToDate));
                 if (finishToDate < DateTime.Parse(CreationDate))
                     AddError(nameof(FinishToDate), "Finish to date cannot be earlier than creation date");
-                if (FinishToHour != null || FinishToMinutes != null)
+                if ((FinishToHour != null || FinishToMinutes != null) && FinishToDate == null)
                     AddError(nameof(FinishToDate), "Finish To time is specified, specify Finish To date");
                 if ((DateRange.Start != null || DateRange.End != null) && finishToDate == null)
                     AddError(nameof(FinishToDate), "Date range is specified, specify Finish To date");

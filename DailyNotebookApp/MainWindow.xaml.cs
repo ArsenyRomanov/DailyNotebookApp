@@ -1,8 +1,11 @@
 ﻿using DailyNotebookApp.Models;
 using DailyNotebookApp.Services;
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
+using System.Windows.Data;
 
 namespace DailyNotebookApp
 {
@@ -108,6 +111,39 @@ namespace DailyNotebookApp
             if (tasks.Count > 1)
                 NotebookDataGrid.SelectedItem = NotebookDataGrid.Items[NotebookDataGrid.SelectedIndex - 1];
             tasks.Remove(taskToDelete);
+        }
+
+        private void FiltersShortDescriptionTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            NotebookDataGrid.ItemsSource = HelpService.FilterCollection(tasks, FiltersShortDescription.Text,
+                                                                               FiltersFinishTo.SelectedDate,
+                                                                               FiltersCreationDate.SelectedDate);
+        }
+
+        private void FiltersFinishTo_SelectedDateChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            NotebookDataGrid.ItemsSource = HelpService.FilterCollection(tasks, FiltersShortDescription.Text,
+                                                                               FiltersFinishTo.SelectedDate,
+                                                                               FiltersCreationDate.SelectedDate);
+        }
+
+        private void FiltersCreationDate_SelectedDateChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            NotebookDataGrid.ItemsSource = HelpService.FilterCollection(tasks, FiltersShortDescription.Text,
+                                                                               FiltersFinishTo.SelectedDate,
+                                                                               FiltersCreationDate.SelectedDate);
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (Height >= (MinHeight + FiltersCreationDate.Height) || WindowState == WindowState.Maximized)
+            {
+                FiltersCreationDate.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                FiltersCreationDate.Visibility = Visibility.Hidden;
+            }
         }
     }
 }
