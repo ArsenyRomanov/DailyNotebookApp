@@ -76,15 +76,15 @@
                 <TextBlock x:Name="DateRangeTextBlock" Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="2" Margin="95,0,0,0"/>
 
                 <TextBlock Grid.Row="1" Grid.Column="4" Text="Subtasks: " FontWeight="Bold"/>
-                <DataGrid x:Name="dgSubtasks" Grid.Row="2" Grid.Column="4"
+                <DataGrid x:Name="SubtasksDataGrid" Grid.Row="2" Grid.Column="4"
                           Grid.RowSpan="4" Grid.ColumnSpan="2" 
                           AutoGenerateColumns="False" HeadersVisibility="None" 
                           CanUserAddRows="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn IsReadOnly="True"/>
-                        <DataGridTextColumn IsReadOnly="True"/>
-                        <DataGridTextColumn IsReadOnly="True"/>
-                        <DataGridTextColumn IsReadOnly="True"/>
+                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Path=OrdinalNumber}"/>
+                        <DataGridCheckBoxColumn IsReadOnly="False" Binding="{Binding Path=IsCompleted, UpdateSourceTrigger=PropertyChanged}"/>
+                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Path=DateString}"/>
+                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Path=Description}"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

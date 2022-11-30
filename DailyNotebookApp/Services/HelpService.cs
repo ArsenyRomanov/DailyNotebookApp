@@ -1,6 +1,7 @@
 ﻿using DailyNotebookApp.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Controls;
 
@@ -63,6 +64,25 @@ namespace DailyNotebookApp.Services
             propertyInfo.SetValue(dateRange, prevValue);
         }
 
+        public static void UpdateProperty(BindingList<Subtask> subtasks)
+        {
+            foreach (var subtask in subtasks)
+            {
+                var prevDescription = subtask.Description;
+                var prevDate = subtask.Date;
+
+                if (prevDescription != null)
+                    subtask.Description = prevDescription;
+                else
+                    subtask.Description = string.Empty;
+
+                if (prevDate != null)
+                    subtask.Date = prevDate;
+                else
+                    subtask.Date = null;
+            }
+        }
+
         public static IEnumerable<Task> FilterCollection(IEnumerable<Task> collection, string shortTask, DateTime? finishTo, DateTime? creationDate)
         {
             var filteredCollection = collection;
@@ -75,6 +95,28 @@ namespace DailyNotebookApp.Services
                 filteredCollection = filteredCollection.Where(item => DateTime.Parse(item.CreationDate.Substring(0, 10)) == creationDate);
 
             return filteredCollection;
+        }
+
+        public static void ManageControlsOnDateRangeChanged(DatePicker current, DatePicker second, Grid subtasksGrid, EventHandler<SelectionChangedEventArgs> selectedDateChanged, BindingList<Subtask> subtasks, DateRange dateRange)
+        {
+            if (current.SelectedDate == null && subtasksGrid.RowDefinitions.Count != 0)
+            {
+                subtasksGrid.Children.RemoveRange(0, subtasksGrid.Children.Count);
+                subtasksGrid.RowDefinitions.RemoveRange(0, subtasksGrid.RowDefinitions.Count);
+                current.Tag = null;
+                second.Tag = null;
+                return;
+            }
+
+            if (current.Tag != null)
+                return;
+
+            if (current.SelectedDate != null && second.SelectedDate != null)
+            {
+                SubtasksControlService.AddSubtaskControls(subtasksGrid, selectedDateChanged, subtasks, dateRange);
+                current.Tag = "true";
+                second.Tag = "true";
+            }
         }
     }
 }

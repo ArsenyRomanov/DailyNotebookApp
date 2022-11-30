@@ -39,6 +39,9 @@ namespace DailyNotebookApp
 
             NotebookDataGrid.ItemsSource = tasks;
             tasks.ListChanged += Tasks_ListChanged;
+            
+            foreach (var task in tasks)
+                task.Subtasks.ListChanged += Tasks_ListChanged;
 
             NotebookDataGrid.SelectedCellsChanged += NotebookDataGrid_SelectedCellsChanged;
         }
@@ -58,6 +61,11 @@ namespace DailyNotebookApp
                 DetailedDescriptionTextBlock.Text = task.DetailedDescription;
                 DateRangeTextBlock.Text = task.DateRange != null ? task.DateRange.ToString() : "-";
 
+                if (task.Subtasks.Count != 0)
+                    SubtasksDataGrid.ItemsSource = task.Subtasks;
+                else
+                    SubtasksDataGrid.ItemsSource = null;
+
                 if (task.DateRange != null)
                     HelpService.MarkDateRangeInCalendar(NotebookCalendar, task.DateRange, task.FinishTo);
                 else if (DateTime.TryParse(task.FinishTo, out DateTime finishToDate))
@@ -73,6 +81,7 @@ namespace DailyNotebookApp
                 TypeOfTaskTextBlock.Text = string.Empty;
                 DetailedDescriptionTextBlock.Text = string.Empty;
                 DateRangeTextBlock.Text = string.Empty;
+                SubtasksDataGrid.ItemsSource = null;
             }
         }
 
@@ -101,6 +110,9 @@ namespace DailyNotebookApp
             if (newTask.CanCreate)
             {
                 tasks.Add(newTask);
+
+                foreach (var task in tasks)
+                    task.Subtasks.ListChanged += Tasks_ListChanged;
             }
         }
 

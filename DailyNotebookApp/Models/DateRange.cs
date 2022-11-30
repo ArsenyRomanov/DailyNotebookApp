@@ -10,7 +10,7 @@ namespace DailyNotebookApp.Models
     {
 		private DateTime? start;
         private DateTime? end;
-        private string CreationDate { get; set; }
+        public string CreationDate { get; set; }
         public DateTime? FinishToDate { get; set; }
 
         public bool HasErrors => propertyErrors.Any();
@@ -55,13 +55,9 @@ namespace DailyNotebookApp.Models
 
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
-        public DateRange(string creationDate)
-        {
-            CreationDate = creationDate;
-        }
-
-        public DateRange(DateTime start, DateTime end)
+        public DateRange(string creationDate, DateTime? start, DateTime? end)
 		{
+            CreationDate = creationDate;
 			Start = start;
 			End = end;
 		}

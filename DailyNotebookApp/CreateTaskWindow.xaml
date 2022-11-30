@@ -15,7 +15,7 @@
                     <DropShadowEffect BlurRadius="30" Color="LightGray" ShadowDepth="0"/>
                 </Border.Effect>
 
-                <Grid>
+                <Grid x:Name="CreateTaskWindowGrid">
                     <StackPanel Width="422" HorizontalAlignment="Left">
                         <TextBlock HorizontalAlignment="Left" Margin="0,0,0,21" Text="New Task" FontSize="36" FontWeight="Bold"
                                    Style="{StaticResource MaterialDesignBody1TextBlock}" Foreground="#FF673AB7"/>
@@ -94,13 +94,15 @@
                                 <DatePicker x:Name="DateRangeFirstDatePicker" HorizontalAlignment="Center"
                                             Margin="0,24,30,0" Width="120"
                                             IsTodayHighlighted="True" FontSize="16"
-                                            SelectedDate="{Binding Start, UpdateSourceTrigger=PropertyChanged}"/>
+                                            SelectedDate="{Binding Start, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedDateChanged="DateRangeFirstDatePicker_SelectedDateChanged"/>
                                 <TextBlock HorizontalAlignment="Right" Margin="0,24,137,0" Text="-"
                                            Style="{StaticResource MaterialDesignBody1TextBlock}"/>
                                 <DatePicker x:Name="DateRangeLastDatePicker" HorizontalAlignment="Right"
                                             Margin="0,24,0,0" Width="120"
                                             IsTodayHighlighted="True" FontSize="16"
-                                            SelectedDate="{Binding End, UpdateSourceTrigger=PropertyChanged}"/>
+                                            SelectedDate="{Binding End, UpdateSourceTrigger=PropertyChanged}"
+                                            SelectedDateChanged="DateRangeLastDatePicker_SelectedDateChanged"/>
                             </Grid>
 
                             <Grid Margin="0,10,0,0">
@@ -117,10 +119,6 @@
 
                             <ScrollViewer MaxHeight="170">
                                 <Grid x:Name="SubtasksGrid">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
                                 </Grid>
                             </ScrollViewer>
                         </StackPanel>

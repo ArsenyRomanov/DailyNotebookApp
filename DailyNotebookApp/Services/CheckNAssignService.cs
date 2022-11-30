@@ -1,5 +1,6 @@
 ﻿using DailyNotebookApp.Models;
 using System;
+using System.ComponentModel;
 using System.Windows.Controls;
 
 namespace DailyNotebookApp.Services
@@ -28,13 +29,28 @@ namespace DailyNotebookApp.Services
             return "-";
         }
 
-        public static DateRange CheckNAssignDateRange(DateTime? start, DateTime? end)
+        public static DateRange CheckNAssignDateRange(string creationDate, DateTime? start, DateTime? end)
         {
             if (start != null && end != null)
             {
-                return new DateRange(start.Value, end.Value);
+                return new DateRange(creationDate, start.Value, end.Value);
             }
             return null;
+        }
+
+        public static BindingList<Subtask> CheckNAssignSubtasks(BindingList<Subtask> subtasks)
+        {
+            var count = subtasks.Count;
+            for (int i = 0; i < count; i++)
+            {
+                if (string.IsNullOrWhiteSpace(subtasks[i].Description) || subtasks[i].Date == null)
+                {
+                    subtasks.RemoveAt(i);
+                    i--;
+                    count--;
+                }
+            }
+            return subtasks;
         }
     }
 }

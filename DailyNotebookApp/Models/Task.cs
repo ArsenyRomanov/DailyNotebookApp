@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Data;
 
 namespace DailyNotebookApp.Models
 {
@@ -30,7 +29,10 @@ namespace DailyNotebookApp.Models
         {
             get
             {
-                if (!propertyErrors.Any() && DateRange != null && !DateRange.HasErrors)
+                var subtasksHasErrors = false;
+                if (Subtasks.Any(item => item.HasErrors))
+                    subtasksHasErrors = true;
+                if (!propertyErrors.Any() && DateRange != null && !DateRange.HasErrors && !subtasksHasErrors)
                     return false;
                 else
                     return true;
@@ -161,10 +163,13 @@ namespace DailyNotebookApp.Models
 
         public DateRange DateRange { get; set; }
 
+        public BindingList<Subtask> Subtasks { get; set; }
+
         public Task()
         {
             CreationDate = HelpService.FormatDateTimeOutput();
-            DateRange = new DateRange(CreationDate);
+            DateRange = new DateRange(CreationDate, null, null);
+            Subtasks = new BindingList<Subtask>();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

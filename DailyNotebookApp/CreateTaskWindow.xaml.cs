@@ -1,7 +1,6 @@
 ﻿using DailyNotebookApp.Models;
 using DailyNotebookApp.Services;
 using System;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -22,18 +21,19 @@ namespace DailyNotebookApp
             DataContext = NewTask;
             DateRangeGrid.DataContext = NewTask.DateRange;
 
-            ShortDescriptionTextBox.GotKeyboardFocus += ElementGotKeyboardFocus;
-            FinishToDatePicker.GotKeyboardFocus += ElementGotKeyboardFocus;
-            FinishToHoursTextBox.GotKeyboardFocus += ElementGotKeyboardFocus;
-            FinishToMinutesTextBox.GotKeyboardFocus += ElementGotKeyboardFocus;
-            PriorityComboBox.GotKeyboardFocus += ElementGotKeyboardFocus;
-            TypeOfTaskComboBox.GotKeyboardFocus += ElementGotKeyboardFocus;
-            DetailedDescriptionTextBox.GotKeyboardFocus += ElementGotKeyboardFocus;
-            DateRangeFirstDatePicker.GotKeyboardFocus += ElementGotKeyboardFocus;
-            DateRangeLastDatePicker.GotKeyboardFocus += ElementGotKeyboardFocus;
+            //ShortDescriptionTextBox.GotKeyboardFocus += ElementGotKeyboardFocus;
+            //FinishToDatePicker.GotKeyboardFocus += ElementGotKeyboardFocus;
+            //FinishToHoursTextBox.GotKeyboardFocus += ElementGotKeyboardFocus;
+            //FinishToMinutesTextBox.GotKeyboardFocus += ElementGotKeyboardFocus;
+            //PriorityComboBox.GotKeyboardFocus += ElementGotKeyboardFocus;
+            //TypeOfTaskComboBox.GotKeyboardFocus += ElementGotKeyboardFocus;
+            //DetailedDescriptionTextBox.GotKeyboardFocus += ElementGotKeyboardFocus;
+            //DateRangeFirstDatePicker.GotKeyboardFocus += ElementGotKeyboardFocus;
+            //DateRangeLastDatePicker.GotKeyboardFocus += ElementGotKeyboardFocus;
+            CreateTaskWindowGrid.GotKeyboardFocus += ElementGotKeyboardFocus;
         }
 
-        private void ElementGotKeyboardFocus(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
+        private void ElementGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             HelpService.UpdateProperty(NewTask, nameof(NewTask.ShortDescription));
             HelpService.UpdateProperty(NewTask, nameof(NewTask.FinishToDate));
@@ -41,6 +41,7 @@ namespace DailyNotebookApp
             HelpService.UpdateProperty(NewTask, nameof(NewTask.FinishToMinutes));
             HelpService.UpdateProperty(NewTask.DateRange, nameof(NewTask.DateRange.Start));
             HelpService.UpdateProperty(NewTask.DateRange, nameof(NewTask.DateRange.End));
+            HelpService.UpdateProperty(NewTask.Subtasks);
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -64,8 +65,11 @@ namespace DailyNotebookApp
                                                                             NewTask.FinishToMinutes);
                 NewTask.Priority = (PriorityEnum)PriorityComboBox.SelectedItem;
                 NewTask.TypeOfTask = (TypeOfTaskEnum)TypeOfTaskComboBox.SelectedItem;
-                NewTask.DateRange = CheckNAssignService.CheckNAssignDateRange(DateRangeFirstDatePicker.SelectedDate,
+                NewTask.DateRange = CheckNAssignService.CheckNAssignDateRange(NewTask.CreationDate,
+                                                                              DateRangeFirstDatePicker.SelectedDate,
                                                                               DateRangeLastDatePicker.SelectedDate);
+
+                NewTask.Subtasks = CheckNAssignService.CheckNAssignSubtasks(NewTask.Subtasks);
 
                 Close();
             }
@@ -110,6 +114,25 @@ namespace DailyNotebookApp
             if ((sender as TextBox).Text.Length == 2)
             {
                 Keyboard.ClearFocus();
+            }
+        }
+
+        private void DateRangeFirstDatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            HelpService.ManageControlsOnDateRangeChanged(DateRangeFirstDatePicker, DateRangeLastDatePicker, SubtasksGrid, DateDatePicker_SelectedDateChanged, NewTask.Subtasks, NewTask.DateRange);
+        }
+
+        private void DateRangeLastDatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            HelpService.ManageControlsOnDateRangeChanged(DateRangeLastDatePicker, DateRangeFirstDatePicker, SubtasksGrid, DateDatePicker_SelectedDateChanged, NewTask.Subtasks, NewTask.DateRange);
+        }
+
+        private void DateDatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if ((sender as DatePicker).Tag == null)
+            {
+                SubtasksControlService.AddSubtaskControls(SubtasksGrid, DateDatePicker_SelectedDateChanged, NewTask.Subtasks, NewTask.DateRange);
+                (sender as DatePicker).Tag = "true";
             }
         }
     }
