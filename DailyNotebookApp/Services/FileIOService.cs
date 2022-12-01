@@ -27,6 +27,10 @@ namespace DailyNotebookApp.Services
             if (!File.Exists(PATH))
             {
                 File.Create(PATH).Dispose();
+                using (var sw = File.CreateText(PATH))
+                {
+                    sw.Write("[]");
+                }
                 return new BindingList<Task>();
             }
             using(var sr = File.OpenText(PATH))

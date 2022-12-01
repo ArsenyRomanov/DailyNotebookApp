@@ -63,8 +63,6 @@ namespace DailyNotebookApp
                 NewTask.FinishTo = CheckNAssignService.CheckNAssignFinishTo(NewTask.FinishToDate,
                                                                             NewTask.FinishToHour,
                                                                             NewTask.FinishToMinutes);
-                NewTask.Priority = (PriorityEnum)PriorityComboBox.SelectedItem;
-                NewTask.TypeOfTask = (TypeOfTaskEnum)TypeOfTaskComboBox.SelectedItem;
                 NewTask.DateRange = CheckNAssignService.CheckNAssignDateRange(NewTask.CreationDate,
                                                                               DateRangeFirstDatePicker.SelectedDate,
                                                                               DateRangeLastDatePicker.SelectedDate);

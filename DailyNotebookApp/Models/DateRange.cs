@@ -62,7 +62,24 @@ namespace DailyNotebookApp.Models
 			End = end;
 		}
 
-		public bool Contains(DateTime dateTime)
+        public void AssignNewDateRange(DateRange dateRange)
+        {
+            CreationDate = dateRange.CreationDate;
+
+            if (dateRange.FinishToDate != null)
+                FinishToDate = new DateTime?(dateRange.FinishToDate.Value);
+            else FinishToDate = null;
+
+            if (dateRange.Start != null)
+                Start = new DateTime?(dateRange.Start.Value);
+            else Start = null;
+
+            if (dateRange.End != null)
+                End = new DateTime?(dateRange.End.Value);
+            else End = null;
+        }
+
+        public bool Contains(DateTime dateTime)
 		{
 			return (start <= dateTime) && (dateTime <= end);
 		}
@@ -99,6 +116,16 @@ namespace DailyNotebookApp.Models
         private void OnErrorsChanged(string propertyName)
         {
             ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+        }
+
+        public bool Coequals(object obj)
+        {
+            DateRange dateRange = obj as DateRange;
+
+            return (this.CreationDate == dateRange.CreationDate) &&
+                   (this.FinishToDate == dateRange.FinishToDate) &&
+                   (this.Start == dateRange.Start) &&
+                   (this.End == dateRange.End);
         }
     }
 }

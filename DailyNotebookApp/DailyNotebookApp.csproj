@@ -69,6 +69,9 @@
     <Compile Include="CreateTaskWindow.xaml.cs">
       <DependentUpon>CreateTaskWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="EditTaskWindow.xaml.cs">
+      <DependentUpon>EditTaskWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\DateRange.cs" />
     <Compile Include="Models\Subtask.cs" />
     <Compile Include="Services\CheckNAssignService.cs" />
@@ -76,6 +79,10 @@
     <Compile Include="Services\HelpService.cs" />
     <Compile Include="Services\SubtasksControlService.cs" />
     <Page Include="CreateTaskWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EditTaskWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

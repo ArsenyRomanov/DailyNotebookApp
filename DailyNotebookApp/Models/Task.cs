@@ -11,8 +11,7 @@ namespace DailyNotebookApp.Models
     {
         private string shortDescription;
         private bool isCompleted;
-        private string creationDate;
-        //private string finishTo;
+        private string finishTo;
         private DateTime? finishToDate;
         private double? finishToHour;
         private double? finishToMinutes;
@@ -20,6 +19,7 @@ namespace DailyNotebookApp.Models
         private TypeOfTaskEnum typeOfTask;
         private string detailedDescription;
         private DateRange dateRange;
+        private BindingList<Subtask> subtasks;
 
         private readonly Dictionary<string, List<string>> propertyErrors = new Dictionary<string, List<string>>();
 
@@ -41,7 +41,15 @@ namespace DailyNotebookApp.Models
 
         public string CreationDate { get; set; }
 
-        public string FinishTo { get; set; }
+        public string FinishTo
+        {
+            get { return finishTo; }
+            set
+            {
+                finishTo = value;
+                OnPropertyChanged(nameof(FinishTo));
+            }
+        }
 
         public DateTime? FinishToDate
         {
@@ -49,13 +57,15 @@ namespace DailyNotebookApp.Models
             set
             {
                 finishToDate = value;
-                DateRange.FinishToDate = finishToDate;
+                OnPropertyChanged(nameof(FinishToDate));
+                if (DateRange != null)
+                    DateRange.FinishToDate = finishToDate;
                 RemoveError(nameof(FinishToDate));
                 if (finishToDate < DateTime.Parse(CreationDate))
                     AddError(nameof(FinishToDate), "Finish to date cannot be earlier than creation date");
-                if ((FinishToHour != null || FinishToMinutes != null) && FinishToDate == null)
+                if ((FinishToHour != null || FinishToMinutes != null) && finishToDate == null)
                     AddError(nameof(FinishToDate), "Finish To time is specified, specify Finish To date");
-                if ((DateRange.Start != null || DateRange.End != null) && finishToDate == null)
+                if (DateRange != null && (DateRange.Start != null || DateRange.End != null) && finishToDate == null)
                     AddError(nameof(FinishToDate), "Date range is specified, specify Finish To date");
             }
         }
@@ -66,6 +76,7 @@ namespace DailyNotebookApp.Models
             set
             {
                 finishToHour = value;
+                OnPropertyChanged(nameof(FinishToHour));
                 RemoveError(nameof(FinishToHour));
                 if (finishToHour < 0 || finishToHour > 24)
                     AddError(nameof(FinishToHour), "Invalid hour input");
@@ -80,6 +91,7 @@ namespace DailyNotebookApp.Models
             set
             {
                 finishToMinutes = value;
+                OnPropertyChanged(nameof(FinishToMinutes));
                 RemoveError(nameof(FinishToMinutes));
                 if (finishToMinutes < 0 || finishToMinutes > 60)
                     AddError(nameof(FinishToMinutes), "Invalid minutes input");
@@ -103,18 +115,12 @@ namespace DailyNotebookApp.Models
             {
                 if (shortDescription == value) return;
                 shortDescription = value;
-
+                OnPropertyChanged(nameof(ShortDescription));
                 RemoveError(nameof(ShortDescription));
-
                 if (string.IsNullOrWhiteSpace(shortDescription))
-                {
                     AddError(nameof(ShortDescription), "Short description cannot be empty");
-                }
-
                 if (shortDescription.Length < 3 || shortDescription.Length > 50)
-                {
                     AddError(nameof(ShortDescription), "Short description should be between 3 and 50 symbols");
-                }
             }
         }
 
@@ -126,6 +132,7 @@ namespace DailyNotebookApp.Models
                 if (Enum.IsDefined(typeof(PriorityEnum), value))
                 {
                     priority = value;
+                    OnPropertyChanged(nameof(Priority));
                 }
             }
         }
@@ -138,6 +145,7 @@ namespace DailyNotebookApp.Models
                 if (Enum.IsDefined(typeof(TypeOfTaskEnum), value))
                 {
                     typeOfTask = value;
+                    OnPropertyChanged(nameof(TypeOfTask));
                 }
             }
         }
@@ -147,29 +155,85 @@ namespace DailyNotebookApp.Models
             get { return detailedDescription; }
             set 
             {
-                if (!string.IsNullOrWhiteSpace(value))
-                {
-                    detailedDescription = value;
-                }
-
+                detailedDescription = value;
+                OnPropertyChanged(nameof(DetailedDescription));
                 RemoveError(nameof(DetailedDescription));
-
                 if (detailedDescription != null && detailedDescription.Length > 210)
-                {
                     AddError(nameof(DetailedDescription), "Detailed description cannot be of more than 210 symbols");
-                }
             }
         }
 
-        public DateRange DateRange { get; set; }
+        public DateRange DateRange
+        {
+            get { return dateRange; }
+            set
+            {
+                dateRange = value;
+                OnPropertyChanged(nameof(DateRange));
+            }
+        }
 
-        public BindingList<Subtask> Subtasks { get; set; }
+        public BindingList<Subtask> Subtasks
+        {
+            get { return subtasks; }
+            set
+            {
+                subtasks = value;
+                OnPropertyChanged(nameof(Subtasks));
+            }
+        }
 
         public Task()
         {
             CreationDate = HelpService.FormatDateTimeOutput();
             DateRange = new DateRange(CreationDate, null, null);
             Subtasks = new BindingList<Subtask>();
+        }
+
+        public void AssignNewTask(Task task)
+        {
+            CreationDate = task.CreationDate;
+            DateRange.AssignNewDateRange(task.DateRange);
+
+            if (task.Subtasks.Any())
+            {
+                for (int i = 0; i < task.Subtasks.Count; i++)
+                {
+                    Subtask newSubtask = new Subtask(DateRange);
+                    newSubtask.AssignNewSubtask(task.Subtasks[i]);
+                    Subtasks.Add(newSubtask);
+                }
+            }
+
+            CanCreate = task.CanCreate;
+            FinishTo = task.FinishTo;
+
+            if (task.FinishToDate != null)
+                FinishToDate = new DateTime?(task.FinishToDate.Value);
+            else FinishToDate = null;
+
+            FinishToHour = task.FinishToHour;
+            FinishToMinutes = task.FinishToMinutes;
+            IsCompleted = task.IsCompleted;
+            ShortDescription = task.ShortDescription;
+            Priority = task.Priority;
+            TypeOfTask = task.TypeOfTask;
+            DetailedDescription = task.DetailedDescription;
+        }
+
+        public void Assign(Task task)
+        {
+            DateRange = task.DateRange;
+            Subtasks = task.Subtasks;
+            CanCreate = task.CanCreate;
+            FinishTo = task.FinishTo;
+            FinishToDate = task.FinishToDate;
+            FinishToHour = task.FinishToHour;
+            FinishToMinutes = task.FinishToMinutes;
+            ShortDescription = task.ShortDescription;
+            Priority = task.Priority;
+            TypeOfTask = task.TypeOfTask;
+            DetailedDescription = task.DetailedDescription;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -207,6 +271,45 @@ namespace DailyNotebookApp.Models
         private void OnErrorsChanged(string propertyName)
         {
             ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+        }
+
+        public bool Coequals(Task task)
+        {
+            var subtaskListsEquals = true;
+            if (Subtasks.Count == task.Subtasks.Count)
+                for (int i = 0; i < Subtasks.Count; i++)
+                {
+                    if (!Subtasks[i].Coequals(task.Subtasks[i]))
+                        subtaskListsEquals = false;
+                }
+            else
+                subtaskListsEquals = false;
+
+            bool dateRangesEquals;
+            if (DateRange != null && task.DateRange != null)
+            {
+                if (DateRange.Coequals(task.DateRange))
+                    dateRangesEquals = true;
+                else
+                    dateRangesEquals = false;
+            }
+            else if (DateRange == null && task.DateRange == null)
+                dateRangesEquals = true;
+            else
+                dateRangesEquals = false;
+
+
+            return (this.CreationDate == task.CreationDate) &&
+                   (dateRangesEquals) &&
+                   (subtaskListsEquals) &&
+                   (this.FinishToDate == task.FinishToDate) &&
+                   (this.FinishToHour == task.FinishToHour) &&
+                   (this.FinishToMinutes == task.FinishToMinutes) &&
+                   (this.IsCompleted == task.IsCompleted) &&
+                   (this.ShortDescription == task.ShortDescription) &&
+                   (this.Priority == task.Priority) &&
+                   (this.TypeOfTask == task.TypeOfTask) &&
+                   (this.DetailedDescription == task.DetailedDescription);
         }
     }
 

@@ -116,12 +116,40 @@ namespace DailyNotebookApp
             }
         }
 
+        private void EditTaskButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!(NotebookDataGrid.SelectedItem is Task taskToEdit))
+                return;
+
+            var editTaskWindow = new EditTaskWindow(taskToEdit);
+            editTaskWindow.ShowDialog();
+
+            if (!editTaskWindow.EditedTask.CanCreate)
+                return;
+
+            if (taskToEdit.Coequals(editTaskWindow.EditedTask))
+                return;
+
+            var index = NotebookDataGrid.SelectedIndex;
+
+            taskToEdit.Assign(editTaskWindow.EditedTask);
+
+            NotebookDataGrid.ItemsSource = null;
+            NotebookDataGrid.ItemsSource = tasks;
+            NotebookDataGrid.SelectedIndex = index;
+        }
+
         private void DeleteTaskButton_Click(object sender, RoutedEventArgs e)
         {
             if (!(NotebookDataGrid.SelectedItem is Task taskToDelete))
                 return;
             if (tasks.Count > 1)
-                NotebookDataGrid.SelectedItem = NotebookDataGrid.Items[NotebookDataGrid.SelectedIndex - 1];
+            {
+                if (NotebookDataGrid.SelectedIndex != 0)
+                    NotebookDataGrid.SelectedItem = NotebookDataGrid.Items[NotebookDataGrid.SelectedIndex - 1];
+                else
+                    NotebookDataGrid.SelectedItem = NotebookDataGrid.Items[NotebookDataGrid.SelectedIndex + 1];
+            }
             tasks.Remove(taskToDelete);
         }
 

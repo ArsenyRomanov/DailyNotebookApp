@@ -28,7 +28,7 @@
             <Button x:Name="ReturnToMenuButton" Content="Return to menu" FontSize="16" Margin="0,0,0,5" Width="300" Height="Auto"/>
             <Button x:Name="CreateTaskButton" Content="Create task" FontSize="16" Margin="0,0,0,5" Width="Auto" Height="Auto" Click="CreateTaskButton_Click"/>
             <Button x:Name="DeleteTaskButton" Content="Delete task" FontSize="16" Margin="0,0,0,5" Width="Auto" Height="Auto" Click="DeleteTaskButton_Click"/>
-            <Button x:Name="EditTaskButton" Content="Edit task" FontSize="16" Width="Auto" Height="Auto"/>
+            <Button x:Name="EditTaskButton" Content="Edit task" FontSize="16" Width="Auto" Height="Auto" Click="EditTaskButton_Click"/>
         </StackPanel>
 
         <GroupBox x:Name="TaskInfoBox" Header="Full information about the task" 

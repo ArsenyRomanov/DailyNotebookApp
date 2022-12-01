@@ -70,6 +70,20 @@ namespace DailyNotebookApp.Models
             DateRange = dateRange;
         }
 
+        public void AssignNewSubtask(Subtask subtask)
+        {
+            OrdinalNumber = subtask.OrdinalNumber;
+
+            if (subtask.Date != null)
+                Date = new DateTime?(subtask.Date.Value);
+            else Date = null;
+
+            DateRange.AssignNewDateRange(subtask.DateRange);
+            DateString = subtask.DateString;
+            Description = subtask.Description;
+            IsCompleted = subtask.IsCompleted;
+        }
+
         public IEnumerable GetErrors(string propertyName)
         {
             if (propertyErrors.TryGetValue(propertyName, out _))
@@ -101,6 +115,15 @@ namespace DailyNotebookApp.Models
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public bool Coequals(Subtask subtask)
+        {
+            return (this.Date == subtask.Date) &&
+                   (this.DateRange.Coequals(subtask.DateRange)) &&
+                   (this.Description == subtask.Description) &&
+                   (this.IsCompleted == subtask.IsCompleted) &&
+                   (this.OrdinalNumber == subtask.OrdinalNumber);
         }
     }
 }

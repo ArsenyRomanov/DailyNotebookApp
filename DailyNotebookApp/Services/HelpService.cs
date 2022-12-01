@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace DailyNotebookApp.Services
 {
@@ -103,6 +105,7 @@ namespace DailyNotebookApp.Services
             {
                 subtasksGrid.Children.RemoveRange(0, subtasksGrid.Children.Count);
                 subtasksGrid.RowDefinitions.RemoveRange(0, subtasksGrid.RowDefinitions.Count);
+                subtasks.Clear();
                 current.Tag = null;
                 second.Tag = null;
                 return;
@@ -117,6 +120,39 @@ namespace DailyNotebookApp.Services
                 current.Tag = "true";
                 second.Tag = "true";
             }
+        }
+
+        public static Binding AddBinding(Task source, string propertyName)
+        {
+            return new Binding
+            {
+                Source = source,
+                Path = new PropertyPath(propertyName),
+                Mode = BindingMode.TwoWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+        }
+
+        public static Binding AddBinding(Subtask source, string propertyName)
+        {
+            return new Binding
+            {
+                Source = source,
+                Path = new PropertyPath(propertyName),
+                Mode = BindingMode.TwoWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
+        }
+
+        public static Binding AddBinding(DateRange source, string propertyName)
+        {
+            return new Binding
+            {
+                Source = source,
+                Path = new PropertyPath(propertyName),
+                Mode = BindingMode.TwoWay,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+            };
         }
     }
 }

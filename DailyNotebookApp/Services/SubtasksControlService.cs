@@ -1,6 +1,7 @@
 ﻿using DailyNotebookApp.Models;
 using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -9,7 +10,10 @@ namespace DailyNotebookApp.Services
 {
     public class SubtasksControlService
     {
-        public static void AddSubtaskControls(Grid subtasksGrid, EventHandler<SelectionChangedEventArgs> selectedDateChanged, BindingList<Subtask> subtasks, DateRange dateRange)
+        public static void AddSubtaskControls(Grid subtasksGrid,
+                                              EventHandler<SelectionChangedEventArgs> selectedDateChanged,
+                                              BindingList<Subtask> subtasks,
+                                              DateRange dateRange)
         {
             subtasksGrid.RowDefinitions.Add(new RowDefinition());
             int rowCount = subtasksGrid.RowDefinitions.Count;
@@ -26,8 +30,8 @@ namespace DailyNotebookApp.Services
             var newDateDatePicker = newControls.DateDatePicker;
             var newDescriptionTextBox = newControls.DescriptionTextBox;
 
-            newDescriptionTextBox.SetBinding(TextBox.TextProperty, AddBinding(subtasks[rowCount - 1], "Description"));
-            newDateDatePicker.SetBinding(DatePicker.SelectedDateProperty, AddBinding(subtasks[rowCount - 1], "Date"));
+            newDescriptionTextBox.SetBinding(TextBox.TextProperty, HelpService.AddBinding(subtasks[rowCount - 1], "Description"));
+            newDateDatePicker.SetBinding(DatePicker.SelectedDateProperty, HelpService.AddBinding(subtasks[rowCount - 1], "Date"));
 
             newDateDatePicker.SelectedDateChanged += selectedDateChanged;
 
@@ -39,15 +43,49 @@ namespace DailyNotebookApp.Services
             subtasksGrid.Children.Add(newDescriptionTextBox);
         }
 
-        private static Binding AddBinding(Subtask source, string propertyName)
+        public static void AddSubtaskControls(Grid subtasksGrid,
+                                              EventHandler<SelectionChangedEventArgs> selectedDateChanged,
+                                              BindingList<Subtask> subtasks,
+                                              BindingList<Subtask> oldSubtasks,
+                                              DateRange dateRange)
         {
-            return new Binding
+            for (int i = 0; i <= oldSubtasks.Count; i++)
             {
-                Source = source,
-                Path = new PropertyPath(propertyName),
-                Mode = BindingMode.TwoWay,
-                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-            };
+                subtasksGrid.RowDefinitions.Add(new RowDefinition());
+                int rowCount = subtasksGrid.RowDefinitions.Count;
+
+                var newSubtask = new Subtask(dateRange)
+                {
+                    OrdinalNumber = rowCount
+                };
+
+                subtasks.Add(newSubtask);
+
+                var newControls = GetControls(rowCount);
+
+                var newOrdinalNumberTextBlock = newControls.OrdinalNumberTextBlock;
+                var newDateDatePicker = newControls.DateDatePicker;
+                var newDescriptionTextBox = newControls.DescriptionTextBox;
+
+                newDescriptionTextBox.SetBinding(TextBox.TextProperty, HelpService.AddBinding(subtasks[rowCount - 1], "Description"));
+                newDateDatePicker.SetBinding(DatePicker.SelectedDateProperty, HelpService.AddBinding(subtasks[rowCount - 1], "Date"));
+
+                if (i != oldSubtasks.Count)
+                {
+                    newDateDatePicker.SelectedDate = oldSubtasks[i].Date;
+                    newDateDatePicker.Tag = "true";
+                    newDescriptionTextBox.Text = oldSubtasks[i].Description;
+                }
+
+                newDateDatePicker.SelectedDateChanged += selectedDateChanged;
+
+                Grid.SetRow(newOrdinalNumberTextBlock, rowCount - 1);
+                Grid.SetRow(newDateDatePicker, rowCount - 1);
+                Grid.SetRow(newDescriptionTextBox, rowCount - 1);
+                subtasksGrid.Children.Add(newOrdinalNumberTextBlock);
+                subtasksGrid.Children.Add(newDateDatePicker);
+                subtasksGrid.Children.Add(newDescriptionTextBox);
+            }
         }
 
         private static (TextBlock OrdinalNumberTextBlock, DatePicker DateDatePicker, TextBox DescriptionTextBox) GetControls(int index)
