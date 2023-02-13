@@ -11,12 +11,30 @@ namespace DailyNotebookApp.Models
         private bool isCompleted;
         private DateTime? date;
         private string description;
+        private DateRange dateRange;
+
+        public int Id { get; set; }
+        public int TaskId { get; set; }
+        public Task Task { get; set; }
+        //public int DateRangeId { get; set; }
 
         public bool HasErrors => propertyErrors.Any();
 
         private readonly Dictionary<string, List<string>> propertyErrors = new Dictionary<string, List<string>>();
 
-        public DateRange DateRange { get; set; }
+        public string DateRangeString { get; set; }
+
+        public DateRange DateRange
+        {
+            get { return dateRange; }
+            set
+            {
+                dateRange = value;
+                if (dateRange != null)
+                    DateRangeString = dateRange.ToString();
+                OnPropertyChanged(nameof(DateRange));
+            }
+        }
 
         public int OrdinalNumber { get; set; }
 
@@ -69,19 +87,8 @@ namespace DailyNotebookApp.Models
         {
             DateRange = dateRange;
         }
-
-        public void AssignNewSubtask(Subtask subtask)
+        public Subtask()
         {
-            OrdinalNumber = subtask.OrdinalNumber;
-
-            if (subtask.Date != null)
-                Date = new DateTime?(subtask.Date.Value);
-            else Date = null;
-
-            DateRange.AssignNewDateRange(subtask.DateRange);
-            DateString = subtask.DateString;
-            Description = subtask.Description;
-            IsCompleted = subtask.IsCompleted;
         }
 
         public IEnumerable GetErrors(string propertyName)

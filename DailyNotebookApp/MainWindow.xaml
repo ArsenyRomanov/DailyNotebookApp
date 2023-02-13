@@ -10,7 +10,7 @@
         Height="680" Width="1135" MinHeight="680" MinWidth="1135"
         WindowStartupLocation="CenterScreen"
         Loaded="Window_Loaded" SizeChanged="Window_SizeChanged">
-    <Grid>
+    <Grid x:Name="MainGrid">
         <DataGrid x:Name="NotebookDataGrid" Margin="5,5,310,274" FontSize="16" FontWeight="Bold" AutoGenerateColumns="False" CanUserAddRows="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Creation date" Width="165" IsReadOnly="True" CanUserResize="False"
@@ -19,7 +19,7 @@
                                     Binding="{Binding Path=FinishTo}"/>
                 <DataGridTextColumn Header="Short description" Width="*" IsReadOnly="True" CanUserResize="False"
                                     Binding="{Binding Path=ShortDescription}"/>
-                <DataGridCheckBoxColumn Header="Done" IsReadOnly="False" CanUserResize="False"
+                <DataGridCheckBoxColumn Header="Completed" IsReadOnly="False" CanUserResize="False"
                                         Binding="{Binding Path=IsCompleted, UpdateSourceTrigger=PropertyChanged}"/>
             </DataGrid.Columns>
         </DataGrid>

@@ -101,13 +101,6 @@
                         <Grid Margin="0,10,0,0">
                             <TextBlock Text="Subtasks: " HorizontalAlignment="Left"
                                        Style="{StaticResource MaterialDesignBody1TextBlock}"/>
-                            <TextBlock Text="(Set more information for subtasks:"
-                                       HorizontalAlignment="Right" Margin="0,7,30,0"
-                                       Style="{StaticResource MaterialDesignBody2TextBlock}"/>
-                            <CheckBox x:Name="SubtasksMoreInfoCheckBox"
-                                      HorizontalAlignment="Right" Margin="0,0,7,0"/>
-                            <TextBlock Text=")" HorizontalAlignment="Right" Margin="0,7,0,0"
-                                       Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                         </Grid>
 
                         <ScrollViewer MaxHeight="170">

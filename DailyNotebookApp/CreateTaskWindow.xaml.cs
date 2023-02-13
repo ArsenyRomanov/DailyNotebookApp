@@ -1,6 +1,7 @@
 ﻿using DailyNotebookApp.Models;
 using DailyNotebookApp.Services;
 using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -67,7 +68,21 @@ namespace DailyNotebookApp
                                                                               DateRangeFirstDatePicker.SelectedDate,
                                                                               DateRangeLastDatePicker.SelectedDate);
 
-                NewTask.Subtasks = CheckNAssignService.CheckNAssignSubtasks(NewTask.Subtasks);
+                NewTask.Subtasks = CheckNAssignService.CheckNAssignSubtasks(NewTask.Subtasks, NewTask.DateRange);
+
+                //if (NewTask.DateRange != null)
+                //    NewTask.DateRange.Task = NewTask;
+
+                //if (NewTask.Subtasks.Any())
+                //{
+                //    foreach (var subtask in NewTask.Subtasks)
+                //    {
+                //        subtask.Task = NewTask;
+                //        subtask.DateRange = NewTask.DateRange;
+                //    }
+
+                //    NewTask.DateRange.Subtasks = NewTask.Subtasks.ToList();
+                //}
 
                 Close();
             }

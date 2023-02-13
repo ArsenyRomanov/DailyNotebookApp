@@ -1,11 +1,9 @@
 ﻿using DailyNotebookApp.Models;
 using DailyNotebookApp.Services;
 using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
-using System.Windows.Data;
 
 namespace DailyNotebookApp
 {
@@ -27,10 +25,7 @@ namespace DailyNotebookApp
         {
             fileIOService = new FileIOService(PATH);
 
-            try
-            {
-                tasks = fileIOService.LoadData();
-            }
+            try { tasks = DataBaseIOService.LoadData(); }
             catch (Exception exception)
             {
                 MessageBox.Show(exception.Message);
@@ -44,6 +39,25 @@ namespace DailyNotebookApp
                 task.Subtasks.ListChanged += Tasks_ListChanged;
 
             NotebookDataGrid.SelectedCellsChanged += NotebookDataGrid_SelectedCellsChanged;
+            MainGrid.MouseDown += MainGrid_MouseDown;
+        }
+
+        private void MainGrid_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (NotebookDataGrid.SelectedItem != null)
+            {
+                NotebookCalendar.SelectedDates.Clear();
+                NotebookDataGrid.SelectedItem = null;
+                ShortDescriptionTextBlock.Text = string.Empty;
+                CompletedCheckBox.IsChecked = false;
+                CreationDateTextBlock.Text = string.Empty;
+                FinishToTextBlock.Text = string.Empty;
+                PriorityTextBlock.Text = string.Empty;
+                TypeOfTaskTextBlock.Text = string.Empty;
+                DetailedDescriptionTextBlock.Text = string.Empty;
+                DateRangeTextBlock.Text = string.Empty;
+                SubtasksDataGrid.ItemsSource = null;
+            }
         }
 
         private void NotebookDataGrid_SelectedCellsChanged(object sender, System.Windows.Controls.SelectedCellsChangedEventArgs e)
@@ -87,18 +101,10 @@ namespace DailyNotebookApp
 
         private void Tasks_ListChanged(object sender, ListChangedEventArgs e)
         {
-            if (e.ListChangedType == ListChangedType.ItemAdded ||
-                e.ListChangedType == ListChangedType.ItemDeleted ||
-                e.ListChangedType == ListChangedType.ItemChanged)
+            if (e.ListChangedType == ListChangedType.ItemChanged)
             {
-                try
-                {
-                    fileIOService.SaveData(tasks);
-                }
-                catch (Exception exception)
-                {
-                    MessageBox.Show(exception.Message);
-                }
+                try { DataBaseIOService.UpdateAll(tasks); }
+                catch (Exception exception) { MessageBox.Show(exception.Message); }
             }
         }
 
@@ -110,6 +116,9 @@ namespace DailyNotebookApp
             if (newTask.CanCreate)
             {
                 tasks.Add(newTask);
+
+                try { DataBaseIOService.AddTask(newTask); }
+                catch (Exception exception) { MessageBox.Show(exception.Message); }
 
                 foreach (var task in tasks)
                     task.Subtasks.ListChanged += Tasks_ListChanged;
@@ -134,6 +143,9 @@ namespace DailyNotebookApp
 
             taskToEdit.Assign(editTaskWindow.EditedTask);
 
+            try { DataBaseIOService.UpdateTask(taskToEdit); }
+            catch (Exception exception) { MessageBox.Show(exception.Message); }
+
             NotebookDataGrid.ItemsSource = null;
             NotebookDataGrid.ItemsSource = tasks;
             NotebookDataGrid.SelectedIndex = index;
@@ -151,6 +163,9 @@ namespace DailyNotebookApp
                     NotebookDataGrid.SelectedItem = NotebookDataGrid.Items[NotebookDataGrid.SelectedIndex + 1];
             }
             tasks.Remove(taskToDelete);
+
+            try { DataBaseIOService.RemoveTask(taskToDelete); }
+            catch (Exception exception) { MessageBox.Show(exception.Message); }
         }
 
         private void FiltersShortDescriptionTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)

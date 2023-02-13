@@ -8,6 +8,11 @@ namespace DailyNotebookApp.Models
 {
     public class DateRange : INotifyDataErrorInfo
     {
+        //public int Id { get; set; }
+        //public int TaskId { get; set; }
+        //public Task Task { get; set; }
+        //public List<Subtask>? Subtasks { get; set; }
+
 		private DateTime? start;
         private DateTime? end;
         public string CreationDate { get; set; }
@@ -62,23 +67,6 @@ namespace DailyNotebookApp.Models
 			End = end;
 		}
 
-        public void AssignNewDateRange(DateRange dateRange)
-        {
-            CreationDate = dateRange.CreationDate;
-
-            if (dateRange.FinishToDate != null)
-                FinishToDate = new DateTime?(dateRange.FinishToDate.Value);
-            else FinishToDate = null;
-
-            if (dateRange.Start != null)
-                Start = new DateTime?(dateRange.Start.Value);
-            else Start = null;
-
-            if (dateRange.End != null)
-                End = new DateTime?(dateRange.End.Value);
-            else End = null;
-        }
-
         public bool Contains(DateTime dateTime)
 		{
 			return (start <= dateTime) && (dateTime <= end);
@@ -86,7 +74,9 @@ namespace DailyNotebookApp.Models
 
         public override string ToString()
         {
-			return Start.Value.ToShortDateString() + " - " + End.Value.ToShortDateString();
+            if (Start != null && End != null)
+                return Start.Value.ToShortDateString() + " - " + End.Value.ToShortDateString();
+            return null;
         }
 
         public IEnumerable GetErrors(string propertyName)

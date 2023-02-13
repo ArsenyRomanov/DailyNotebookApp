@@ -38,7 +38,7 @@ namespace DailyNotebookApp.Services
             return null;
         }
 
-        public static BindingList<Subtask> CheckNAssignSubtasks(BindingList<Subtask> subtasks)
+        public static BindingList<Subtask> CheckNAssignSubtasks(BindingList<Subtask> subtasks, DateRange dateRange)
         {
             var count = subtasks.Count;
             for (int i = 0; i < count; i++)
@@ -50,6 +50,12 @@ namespace DailyNotebookApp.Services
                     count--;
                 }
             }
+
+            foreach (var subtask in subtasks)
+            {
+                subtask.DateRange = dateRange;
+            }
+
             return subtasks;
         }
     }

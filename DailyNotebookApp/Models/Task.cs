@@ -18,10 +18,12 @@ namespace DailyNotebookApp.Models
         private PriorityEnum priority;
         private TypeOfTaskEnum typeOfTask;
         private string detailedDescription;
-        private DateRange dateRange;
-        private BindingList<Subtask> subtasks;
+        private DateRange? dateRange;
+        private BindingList<Subtask>? subtasks;
 
         private readonly Dictionary<string, List<string>> propertyErrors = new Dictionary<string, List<string>>();
+
+        public int Id { get; set; }
 
         public bool CanCreate { get; set; } = false;
 
@@ -163,17 +165,21 @@ namespace DailyNotebookApp.Models
             }
         }
 
-        public DateRange DateRange
+        public string DateRangeString { get; set; }
+
+        public DateRange? DateRange
         {
             get { return dateRange; }
             set
             {
                 dateRange = value;
+                if (dateRange != null)
+                    DateRangeString = dateRange.ToString();
                 OnPropertyChanged(nameof(DateRange));
             }
         }
 
-        public BindingList<Subtask> Subtasks
+        public BindingList<Subtask>? Subtasks
         {
             get { return subtasks; }
             set
@@ -190,37 +196,6 @@ namespace DailyNotebookApp.Models
             Subtasks = new BindingList<Subtask>();
         }
 
-        public void AssignNewTask(Task task)
-        {
-            CreationDate = task.CreationDate;
-            DateRange.AssignNewDateRange(task.DateRange);
-
-            if (task.Subtasks.Any())
-            {
-                for (int i = 0; i < task.Subtasks.Count; i++)
-                {
-                    Subtask newSubtask = new Subtask(DateRange);
-                    newSubtask.AssignNewSubtask(task.Subtasks[i]);
-                    Subtasks.Add(newSubtask);
-                }
-            }
-
-            CanCreate = task.CanCreate;
-            FinishTo = task.FinishTo;
-
-            if (task.FinishToDate != null)
-                FinishToDate = new DateTime?(task.FinishToDate.Value);
-            else FinishToDate = null;
-
-            FinishToHour = task.FinishToHour;
-            FinishToMinutes = task.FinishToMinutes;
-            IsCompleted = task.IsCompleted;
-            ShortDescription = task.ShortDescription;
-            Priority = task.Priority;
-            TypeOfTask = task.TypeOfTask;
-            DetailedDescription = task.DetailedDescription;
-        }
-
         public void Assign(Task task)
         {
             DateRange = task.DateRange;
@@ -234,6 +209,7 @@ namespace DailyNotebookApp.Models
             Priority = task.Priority;
             TypeOfTask = task.TypeOfTask;
             DetailedDescription = task.DetailedDescription;
+            IsCompleted = task.IsCompleted;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
