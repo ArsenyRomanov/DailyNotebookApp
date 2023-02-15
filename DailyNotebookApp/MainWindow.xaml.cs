@@ -12,9 +12,9 @@ namespace DailyNotebookApp
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly string PATH = $"{Environment.CurrentDirectory}\\tasks.json";
+        //private readonly string PATH = $"{Environment.CurrentDirectory}\\tasks.json";
         private BindingList<Task> tasks;
-        private FileIOService fileIOService;
+        //private FileIOService fileIOService;
 
         public MainWindow()
         {
@@ -23,7 +23,7 @@ namespace DailyNotebookApp
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            fileIOService = new FileIOService(PATH);
+            //fileIOService = new FileIOService(PATH);
 
             try { tasks = DataBaseIOService.LoadData(); }
             catch (Exception exception)
@@ -38,8 +38,12 @@ namespace DailyNotebookApp
             foreach (var task in tasks)
                 task.Subtasks.ListChanged += Tasks_ListChanged;
 
+            FiltersIsCompleted.ItemsSource = Enum.GetValues(typeof(IsCompletedEnum));
+            FiltersIsCompleted.SelectedItem = IsCompletedEnum.All;
+
             NotebookDataGrid.SelectedCellsChanged += NotebookDataGrid_SelectedCellsChanged;
             MainGrid.MouseDown += MainGrid_MouseDown;
+            FiltersIsCompleted.SelectionChanged += IsCompletedComboBox_SelectionChanged;
         }
 
         private void MainGrid_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -172,21 +176,32 @@ namespace DailyNotebookApp
         {
             NotebookDataGrid.ItemsSource = HelpService.FilterCollection(tasks, FiltersShortDescription.Text,
                                                                                FiltersFinishTo.SelectedDate,
-                                                                               FiltersCreationDate.SelectedDate);
+                                                                               FiltersCreationDate.SelectedDate,
+                                                                               (IsCompletedEnum)FiltersIsCompleted.SelectedItem);
         }
 
         private void FiltersFinishTo_SelectedDateChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             NotebookDataGrid.ItemsSource = HelpService.FilterCollection(tasks, FiltersShortDescription.Text,
                                                                                FiltersFinishTo.SelectedDate,
-                                                                               FiltersCreationDate.SelectedDate);
+                                                                               FiltersCreationDate.SelectedDate,
+                                                                               (IsCompletedEnum)FiltersIsCompleted.SelectedItem);
         }
 
         private void FiltersCreationDate_SelectedDateChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             NotebookDataGrid.ItemsSource = HelpService.FilterCollection(tasks, FiltersShortDescription.Text,
                                                                                FiltersFinishTo.SelectedDate,
-                                                                               FiltersCreationDate.SelectedDate);
+                                                                               FiltersCreationDate.SelectedDate,
+                                                                               (IsCompletedEnum)FiltersIsCompleted.SelectedItem);
+        }
+
+        private void IsCompletedComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            NotebookDataGrid.ItemsSource = HelpService.FilterCollection(tasks, FiltersShortDescription.Text,
+                                                                               FiltersFinishTo.SelectedDate,
+                                                                               FiltersCreationDate.SelectedDate,
+                                                                               (IsCompletedEnum)FiltersIsCompleted.SelectedItem);
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -201,4 +216,11 @@ namespace DailyNotebookApp
             }
         }
     }
+}
+
+public enum IsCompletedEnum
+{
+    All,
+    Completed,
+    Uncompleted
 }

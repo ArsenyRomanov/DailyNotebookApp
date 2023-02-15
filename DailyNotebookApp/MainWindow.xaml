@@ -7,7 +7,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="Daily Notebook"
-        Height="680" Width="1135" MinHeight="680" MinWidth="1135"
+        Height="665" Width="1135" MinHeight="665" MinWidth="1135"
         WindowStartupLocation="CenterScreen"
         Loaded="Window_Loaded" SizeChanged="Window_SizeChanged">
     <Grid x:Name="MainGrid">
@@ -102,6 +102,11 @@
                 <Button x:Name="AllFiltersButton" Content="All filters" 
                         HorizontalAlignment="Right" Margin="0,5,0,0"
                         Style="{StaticResource MaterialDesignFlatButton}" Height="Auto"/>
+            </Grid>
+            <Grid>
+                <TextBlock Text="IsCompleted:" FontSize="14" Width="85" Margin="0,3,0,0" HorizontalAlignment="Left"
+                           Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                <ComboBox x:Name="FiltersIsCompleted" FontSize="14" Width="200" HorizontalAlignment="Right"/>
             </Grid>
             <TextBox x:Name="FiltersShortDescription"
                      materialDesign:HintAssist.Hint="Short description contains" FontSize="14"
